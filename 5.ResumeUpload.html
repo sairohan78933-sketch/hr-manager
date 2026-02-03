@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Resumes - SmartHire</title>
+    <style>
+        /* --------------------------------------------------
+           VARIABLES & RESET
+           -------------------------------------------------- */
+        :root {
+            --primary-purple: #6A5AE0;
+            --primary-hover: #5648B8;
+            --light-lavender: #E9E6FA;
+            --soft-blue: #5DA9E9;
+            --success-green: #4CAF50;
+            --warning-orange: #F5A623;
+            --error-red: #E74C3C;
+            --dark-text: #2E2E2E;
+            --muted-gray: #8A8A8A;
+            --card-bg: #FFFFFF;
+            --page-bg: #F6F5FB;
+            --border-color: #E0E0E0;
+            
+            --sidebar-width: 260px;
+            --header-height: 70px;
+            --bottom-bar-height: 80px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--page-bg);
+            color: var(--dark-text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* --------------------------------------------------
+           SIDEBAR
+           -------------------------------------------------- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            padding: 0 24px 30px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-purple);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--muted-gray);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--page-bg);
+            color: var(--primary-purple);
+        }
+
+        .nav-item.active {
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* --------------------------------------------------
+           MAIN CONTENT
+           -------------------------------------------------- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-header {
+            height: var(--header-height);
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* --------------------------------------------------
+           RESUME UPLOAD CONTENT
+           -------------------------------------------------- */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            padding-bottom: calc(var(--bottom-bar-height) + 30px);
+        }
+
+        .upload-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-heading {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--dark-text);
+        }
+
+        /* Selected JD Card */
+        .jd-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .jd-icon-box {
+            width: 56px;
+            height: 56px;
+            background-color: var(--light-lavender);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-purple);
+            flex-shrink: 0;
+        }
+
+        .jd-details {
+            flex: 1;
+        }
+
+        .jd-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .version-badge {
+            background-color: #E8F5E9;
+            color: var(--success-green);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .jd-meta {
+            font-size: 14px;
+            color: var(--muted-gray);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .lock-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--muted-gray);
+            font-size: 13px;
+            background-color: #F5F5F5;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        /* Upload Area */
+        .upload-zone {
+            border: 2px dashed var(--primary-purple);
+            border-radius: 16px;
+            /* Linear Gradient Background */
+            background: linear-gradient(180deg, rgba(233, 230, 250, 0.3) 0%, rgba(233, 230, 250, 0.6) 100%);
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover {
+            background: linear-gradient(180deg, rgba(233, 230, 250, 0.5) 0%, rgba(233, 230, 250, 0.8) 100%);
+            border-color: var(--primary-hover);
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+            color: var(--primary-purple);
+        }
+
+        .upload-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark-text);
+        }
+
+        .upload-helper {
+            font-size: 14px;
+            color: var(--muted-gray);
+            margin-bottom: 20px;
+        }
+
+        .btn-browse {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            color: var(--dark-text);
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-browse:hover {
+            border-color: var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .file-rules {
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--muted-gray);
+        }
+
+        /* Info Panel */
+        .info-panel {
+            background-color: #E3F2FD;
+            border: 1px solid #BBDEFB;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .info-icon {
+            color: #1976D2;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #0D47A1;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer-copyright {
+            text-align: center;
+            color: var(--muted-gray);
+            font-size: 12px;
+            margin-top: 40px;
+        }
+
+        /* Bottom Bar */
+        .bottom-bar {
+            height: var(--bottom-bar-height);
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 30px;
+            gap: 15px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .btn-cancel {
+            background: none;
+            border: none;
+            color: var(--muted-gray);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 10px 20px;
+        }
+
+        .btn-cancel:hover {
+            color: var(--dark-text);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* --------------------------------------------------
+           MODAL STYLES
+           -------------------------------------------------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-container {
+            background: var(--card-bg);
+            width: 600px;
+            max-width: 90%;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--muted-gray);
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover {
+            background-color: #F5F5F5;
+            color: var(--error-red);
+        }
+
+        .modal-body {
+            padding: 30px;
+            background-color: #FAFAFA;
+        }
+
+        .duplicate-list {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .duplicate-item {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            color: var(--error-red);
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark-text);
+            display: block;
+        }
+
+        .file-meta {
+            font-size: 12px;
+            color: var(--muted-gray);
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            background-color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="6" fill="#6A5AE0"/>
+                <path d="M7 12L10 15L17 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            SmartHire
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                Dashboard
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                JD Version
+            </div>
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                Resume Upload
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                Analysis Result
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="page-title">Upload Resumes</div>
+            <div class="header-right">
+                <div class="avatar">S</div>
+            </div>
+        </header>
+
+        <div class="content-scroll">
+            <div class="upload-wrapper">
+                <h1 class="section-heading">Upload Resumes</h1>
+
+                <!-- 11.2 Selected Job Description -->
+                <div class="jd-card">
+                    <div class="jd-icon-box">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    </div>
+                    <div class="jd-details">
+                        <div class="jd-title">
+                            AI/ML Engineer – Senior
+                            <span class="version-badge">v2.1 (Latest)</span>
+                        </div>
+                        <div class="jd-meta">
+                            <span>San Francisco</span>
+                        </div>
+                    </div>
+                    <div class="lock-status">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        Locked for resume uploads
+                    </div>
+                </div>
+
+                <!-- 11.3 Resume Upload Area -->
+                <div class="upload-zone">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <div class="upload-text">Drag and drop your resume files here</div>
+                    <div class="upload-helper">or</div>
+                    <button class="btn-browse">Browse Files</button>
+                    <div class="file-rules">PDF files only. Max file size 10MB per file</div>
+                </div>
+
+                <!-- 11.4 Duplicate Resume Information -->
+                <div class="info-panel">
+                    <svg class="info-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <div class="info-text">
+                        Duplicate resumes are automatically detected and will be flagged for review after upload. You will have the option to skip or replace duplicates.
+                    </div>
+                </div>
+
+                <!-- 11.6 Footer -->
+                <div class="footer-copyright">
+                    © 2026 SmartHire. All rights reserved.
+                </div>
+            </div>
+        </div>
+
+        <!-- 11.5 Primary Action Section -->
+        <div class="bottom-bar">
+            <button class="btn-cancel">Cancel</button>
+            <button class="btn-primary" onclick="openModal()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Upload Resumes
+            </button>
+        </div>
+    </div>
+
+    <!-- Duplicate Resolution Modal -->
+    <div class="modal-overlay" id="duplicateModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">Duplicate Resumes Detected</div>
+                <button class="close-btn" onclick="closeModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 14px; color: var(--dark-text); line-height: 1.5;">
+                    The following files already exist in the system. Please choose how you would like to handle these duplicates.
+                </p>
+                <div class="duplicate-list">
+                    <div class="duplicate-item">
+                        <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        <div class="file-info">
+                            <span class="file-name">John_Doe_Resume.pdf</span>
+                            <span class="file-meta">2.4 MB • Uploaded on Jan 15, 2024</span>
+                        </div>
+                    </div>
+                    <div class="duplicate-item">
+                        <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        <div class="file-info">
+                            <span class="file-name">Priya_Sharma_CV.pdf</span>
+                            <span class="file-meta">1.8 MB • Uploaded on Feb 02, 2024</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Skip Duplicates</button>
+                <button class="btn-primary" onclick="closeModal()">Replace</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('duplicateModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('duplicateModal').classList.remove('active');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('duplicateModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+
+</body>
+</html>

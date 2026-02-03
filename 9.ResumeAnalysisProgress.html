@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analysis Progress - SmartHire</title>
+    <style>
+        /* --------------------------------------------------
+           VARIABLES & RESET
+           -------------------------------------------------- */
+        :root {
+            --primary-purple: #6A5AE0;
+            --primary-hover: #5648B8;
+            --light-lavender: #E9E6FA;
+            --soft-blue: #5DA9E9;
+            --success-green: #4CAF50;
+            --warning-orange: #F5A623;
+            --error-red: #E74C3C;
+            --dark-text: #2E2E2E;
+            --muted-gray: #8A8A8A;
+            --card-bg: #FFFFFF;
+            --page-bg: #F6F5FB;
+            --border-color: #E0E0E0;
+
+            --sidebar-width: 260px;
+            --header-height: 70px;
+            --bottom-bar-height: 80px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--page-bg);
+            color: var(--dark-text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --------------------------------------------------
+           SIDEBAR
+           -------------------------------------------------- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            padding: 0 24px 30px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-purple);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--muted-gray);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--page-bg);
+            color: var(--primary-purple);
+        }
+
+        .nav-item.active {
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* --------------------------------------------------
+           MAIN CONTENT
+           -------------------------------------------------- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-header {
+            height: var(--header-height);
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* --------------------------------------------------
+           ANALYSIS PROGRESS CONTENT
+           -------------------------------------------------- */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            padding-bottom: calc(var(--bottom-bar-height) + 30px);
+        }
+
+        .analysis-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-heading {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--dark-text);
+        }
+
+        /* 15.2 JD Version Info Section */
+        .jd-info-bar {
+            /* Linear Gradient Background */
+            background: linear-gradient(135deg, #FFFFFF 0%, #F4F2FF 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .jd-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .jd-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--muted-gray);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .jd-name-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+
+        .version-pill {
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-input {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            width: 240px;
+            background-color: white;
+        }
+
+        .status-select {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        /* 15.3 Overall Analysis Progress */
+        .overall-progress-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .progress-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .progress-percent {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-purple);
+        }
+
+        .progress-track-large {
+            height: 12px;
+            background-color: #F0F0F0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill-large {
+            height: 100%;
+            width: 57%;
+            /* Gradient Progress Bar */
+            background: linear-gradient(90deg, var(--primary-purple) 0%, var(--soft-blue) 100%);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        /* 15.4 Individual Resume Cards */
+        .resume-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .resume-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .resume-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary-purple);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .candidate-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #F0F0F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--muted-gray);
+            font-size: 18px;
+        }
+
+        .candidate-info h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .candidate-info p {
+            font-size: 13px;
+            color: var(--muted-gray);
+        }
+
+        .card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .status-analyzing {
+            background-color: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .status-completed {
+            background-color: #E8F5E9;
+            color: var(--success-green);
+        }
+
+        .status-failed {
+            background-color: #FFEBEE;
+            color: var(--error-red);
+        }
+
+        .card-progress {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .progress-track-small {
+            height: 6px;
+            background-color: #F0F0F0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill-small {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .re-analyze-link {
+            font-size: 12px;
+            color: var(--primary-purple);
+            font-weight: 600;
+            cursor: pointer;
+            text-align: right;
+            margin-top: 4px;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .re-analyze-link:hover {
+            text-decoration: underline;
+        }
+
+        .select-failed-btn {
+            font-size: 12px;
+            color: var(--error-red);
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            margin-top: 4px;
+        }
+
+        .select-failed-btn:hover {
+            text-decoration: underline;
+        }
+
+        .select-failed-btn.selected {
+            color: var(--primary-purple);
+        }
+
+        /* Checkbox styling for failed cards */
+        .failed-card-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+
+        .card-header-with-checkbox {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .failed-indicator {
+            display: none;
+        }
+
+        .failed-indicator.show {
+            display: block;
+        }
+
+        /* Footer */
+        .footer-copyright {
+            text-align: center;
+            color: var(--muted-gray);
+            font-size: 12px;
+            margin-top: 40px;
+        }
+
+        /* 15.6 Global Re-Analyze Action */
+        .bottom-bar {
+            height: var(--bottom-bar-height);
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 30px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .btn-primary-gradient {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, #5648B8 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(106, 90, 224, 0.2);
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        .btn-primary-gradient:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(106, 90, 224, 0.3);
+        }
+
+        .btn-primary-gradient:disabled {
+            background: #E0E0E0;
+            color: #9E9E9E;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn-primary-gradient.hidden {
+            display: none !important;
+        }
+
+        .btn-primary-gradient.visible {
+            display: flex !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="6" fill="#6A5AE0" />
+                <path d="M7 12L10 15L17 8" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            SmartHire
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+                </svg>
+                Dashboard
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                </svg>
+                JD Version
+            </div>
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z" />
+                </svg>
+                Resume Upload
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+                </svg>
+                Analysis Result
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="page-title">Resume Analysis Progress</div>
+            <div class="header-right">
+                <div class="avatar">S</div>
+            </div>
+        </header>
+
+        <div class="content-scroll">
+            <div class="analysis-container">
+                <h1 class="section-heading">Resume Analysis Progress</h1>
+
+                <!-- 15.2 JD Version Information -->
+                <div class="jd-info-bar">
+                    <div class="jd-details">
+                        <span class="jd-label">JD Version Used</span>
+                        <div class="jd-name-badge">
+                            v1.2 – AI/ML Engineer JD
+                            <span class="version-pill">Locked</span>
+                        </div>
+                    </div>
+                    <div class="filter-controls">
+                        <input type="text" class="search-input" placeholder="Search candidates by name">
+                        <select class="status-select">
+                            <option value="all">Status: All</option>
+                            <option value="analyzing">Analyzing</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 15.3 Overall Analysis Progress -->
+                <div class="overall-progress-card">
+                    <div class="progress-header">
+                        <span class="progress-title">Overall Analysis Progress</span>
+                        <span class="progress-percent" id="progressPercent">50% Complete</span>
+                    </div>
+                    <div class="progress-track-large">
+                        <div class="progress-fill-large" id="overallProgressBar" style="width: 50%;"></div>
+                    </div>
+                </div>
+
+                <!-- 15.4 Individual Resume Analysis Cards -->
+                <div class="resume-grid">
+                    <!-- Card 1: Analyzing -->
+                    <div class="resume-card">
+                        <div class="card-header">
+                            <div class="candidate-avatar">JD</div>
+                            <div class="candidate-info">
+                                <h4>John Doe</h4>
+                                <p>john.doe@example.com</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span style="color:var(--muted-gray);">v1.2</span>
+                            <span class="status-badge status-analyzing">Analyzing</span>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-track-small">
+                                <div class="progress-fill-small analyzing-progress"
+                                    style="width: 50%; background-color: #1976D2;"></div>
+                            </div>
+                            <span class="progress-label"
+                                style="font-size:11px; color:var(--muted-gray); text-align:right;">50%</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Completed -->
+                    <div class="resume-card">
+                        <div class="card-header">
+                            <div class="candidate-avatar" style="background-color:#E8F5E9; color:var(--success-green);">
+                                JS</div>
+                            <div class="candidate-info">
+                                <h4>Jane Smith</h4>
+                                <p>jane.smith@example.com</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span style="color:var(--muted-gray);">v1.2</span>
+                            <span class="status-badge status-completed">Completed</span>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-track-small">
+                                <div class="progress-fill-small"
+                                    style="width: 100%; background-color: var(--success-green);"></div>
+                            </div>
+                            <span style="font-size:11px; color:var(--muted-gray); text-align:right;">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Failed -->
+                    <div class="resume-card failed-card" data-candidate="Mike Ross" style="border-color: #FFEBEE;">
+                        <div class="card-header">
+                            <input type="checkbox" class="failed-card-checkbox" data-candidate="Mike Ross"
+                                style="display:none;">
+                            <div class="candidate-avatar" style="background-color:#FFEBEE; color:var(--error-red);">MR
+                            </div>
+                            <div class="candidate-info">
+                                <h4>Mike Ross</h4>
+                                <p>mike.ross@example.com</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span style="color:var(--muted-gray);">v1.2</span>
+                            <span class="status-badge status-failed">Failed</span>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-track-small">
+                                <div class="progress-fill-small"
+                                    style="width: 15%; background-color: var(--error-red);"></div>
+                            </div>
+                            <span style="font-size:11px; color:var(--error-red);">Error processing file</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Analyzing -->
+                    <div class="resume-card">
+                        <div class="card-header">
+                            <div class="candidate-avatar">AB</div>
+                            <div class="candidate-info">
+                                <h4>Alice Brown</h4>
+                                <p>alice.brown@example.com</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span style="color:var(--muted-gray);">v1.2</span>
+                            <span class="status-badge status-analyzing">Analyzing</span>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-track-small">
+                                <div class="progress-fill-small analyzing-progress"
+                                    style="width: 50%; background-color: #1976D2;"></div>
+                            </div>
+                            <span class="progress-label"
+                                style="font-size:11px; color:var(--muted-gray); text-align:right;">50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 15.8 Footer -->
+                <div class="footer-copyright">
+                    © 2026 SmartHire. All rights reserved.
+                </div>
+            </div>
+        </div>
+
+        <!-- 15.6 Global Re-Analyze Action -->
+        <div class="bottom-bar">
+            <button class="btn-primary-gradient" id="reAnalyzeBtn" style="display: none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 4v6h-6"></path>
+                    <path d="M1 20v-6h6"></path>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+                <span id="reAnalyzeText">Re-Analyze (0 Selected)</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Dynamic Progress Bar Animation
+        function animateProgressBars() {
+            const analyzingBars = document.querySelectorAll('.analyzing-progress');
+            const overallBar = document.getElementById('overallProgressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            let currentProgress = 50;
+
+            const progressInterval = setInterval(() => {
+                if (currentProgress < 100) {
+                    currentProgress += Math.random() * 3 + 1;
+                    if (currentProgress > 100) currentProgress = 100;
+
+                    const displayProgress = Math.floor(currentProgress);
+                    overallBar.style.width = displayProgress + '%';
+                    progressPercent.textContent = displayProgress + '% Complete';
+
+                    analyzingBars.forEach(bar => {
+                        bar.style.width = displayProgress + '%';
+                        const progressLabel = bar.parentElement.nextElementSibling;
+                        if (progressLabel && progressLabel.classList.contains('progress-label')) {
+                            progressLabel.textContent = displayProgress + '%';
+                        }
+                    });
+
+                    if (currentProgress >= 100) {
+                        clearInterval(progressInterval);
+                    }
+                }
+            }, 1000);
+        }
+
+        // Handle checkbox changes
+        function setupFailedCheckboxes() {
+            const checkboxes = document.querySelectorAll('.failed-card-checkbox');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    updateReAnalyzeButton();
+                });
+            });
+        }
+
+        // Update Re-Analyze button visibility
+        function updateReAnalyzeButton() {
+            const reAnalyzeBtn = document.getElementById('reAnalyzeBtn');
+            const checkedBoxes = document.querySelectorAll('.failed-card-checkbox:checked');
+            const selectedCount = checkedBoxes.length;
+
+            if (selectedCount > 0) {
+                reAnalyzeBtn.style.display = 'flex';
+                document.getElementById('reAnalyzeText').textContent = `Re-Analyze (${selectedCount} Selected)`;
+            } else {
+                reAnalyzeBtn.style.display = 'none';
+            }
+        }
+
+        // Handle Re-Analyze button click
+        function setupReAnalyzeBtn() {
+            const reAnalyzeBtn = document.getElementById('reAnalyzeBtn');
+
+            reAnalyzeBtn.addEventListener('click', function () {
+                const checkedBoxes = document.querySelectorAll('.failed-card-checkbox:checked');
+                const selectedCandidates = Array.from(checkedBoxes).map(cb => cb.dataset.candidate);
+
+                if (selectedCandidates.length > 0) {
+                    alert(`Re-analyzing: ${selectedCandidates.join(', ')}`);
+
+                    // Reset selections
+                    checkedBoxes.forEach(cb => {
+                        cb.checked = false;
+                    });
+
+                    updateReAnalyzeButton();
+                }
+            });
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            animateProgressBars();
+            setupFailedCheckboxes();
+            setupReAnalyzeBtn();
+            updateReAnalyzeButton();
+            setupFilter();
+        });
+
+        // Filter functionality
+        function setupFilter() {
+            const statusSelect = document.querySelector('.status-select');
+            const resumeCards = document.querySelectorAll('.resume-card');
+
+            statusSelect.addEventListener('change', function () {
+                const filterValue = this.value;
+
+                resumeCards.forEach(card => {
+                    const statusBadge = card.querySelector('.status-badge');
+                    if (!statusBadge) return;
+
+                    const statusText = statusBadge.textContent.trim().toLowerCase();
+
+                    // Determine visibility
+                    let shouldShow = (filterValue === 'all') || (statusText === filterValue);
+
+                    if (shouldShow) {
+                        card.style.display = 'flex'; // maintain flex layout
+                    } else {
+                        card.style.display = 'none';
+                    }
+
+                    // Handle selection checkbox for failed cards
+                    if (statusText === 'failed') {
+                        const checkbox = card.querySelector('.failed-card-checkbox');
+                        if (checkbox) {
+                            if (filterValue === 'failed') {
+                                checkbox.style.display = 'block';
+                            } else {
+                                checkbox.style.display = 'none';
+                                // Reset selection specific to this UI behavior
+                                checkbox.checked = false;
+                            }
+                        }
+                    }
+                });
+                // Update the bottom bar state after potential deselection
+                updateReAnalyzeButton();
+            });
+        }
+    </script>

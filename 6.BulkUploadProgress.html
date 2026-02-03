@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Upload Progress - SmartHire</title>
+    <style>
+        /* --------------------------------------------------
+           VARIABLES & RESET
+           -------------------------------------------------- */
+        :root {
+            --primary-purple: hwb(247 42% 15%);
+            --primary-hover: #5648B8;
+            --light-lavender: #E9E6FA;
+            --soft-blue: #5DA9E9;
+            --success-green: #4CAF50;
+            --warning-orange: #F5A623;
+            --error-red: #df4d3d;
+            --dark-text: #2E2E2E;
+            --muted-gray: #8A8A8A;
+            --card-bg: #FFFFFF;
+            --page-bg: #F6F5FB;
+            --border-color: #E0E0E0;
+            
+            --sidebar-width: 260px;
+            --header-height: 70px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--page-bg);
+            color: var(--dark-text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* --------------------------------------------------
+           SIDEBAR
+           -------------------------------------------------- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            padding: 0 24px 30px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-purple);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--muted-gray);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--page-bg);
+            color: var(--primary-purple);
+        }
+
+        .nav-item.active {
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* --------------------------------------------------
+           MAIN CONTENT
+           -------------------------------------------------- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-header {
+            height: var(--header-height);
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* --------------------------------------------------
+           BULK UPLOAD CONTENT
+           -------------------------------------------------- */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .progress-container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-heading {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--dark-text);
+        }
+
+        /* Overall Progress Card */
+        .progress-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            margin-bottom: 40px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .progress-info h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .progress-info p {
+            font-size: 14px;
+            color: var(--muted-gray);
+        }
+
+        .progress-stats {
+            text-align: right;
+        }
+
+        .percentage {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-purple);
+            line-height: 1;
+        }
+
+        .count-text {
+            font-size: 13px;
+            color: var(--muted-gray);
+            margin-top: 4px;
+        }
+
+        .progress-track {
+            height: 12px;
+            background-color: #F0F0F0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 75%;
+            background: linear-gradient(90deg, var(--primary-purple) 0%, #8E84F5 100%);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 15px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            border-color: var(--border-color);
+            color: var(--dark-text);
+        }
+
+        .btn-secondary:hover {
+            background-color: #F5F5F5;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-purple);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:disabled {
+            background-color: #E0E0E0;
+            color: #9E9E9E;
+            cursor: not-allowed;
+            border-color: transparent;
+        }
+
+        /* Individual File Status */
+        .file-status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-gray);
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--dark-text);
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .status-table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px 24px;
+            background-color: #FAFAFA;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--muted-gray);
+            font-weight: 600;
+        }
+
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--dark-text);
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-completed { background-color: #E8F5E9; color: var(--success-green); }
+        .status-progress { background-color: #FFF3E0; color: var(--warning-orange); }
+        .status-failed { background-color: #FFEBEE; color: var(--error-red); }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        .footer-copyright {
+            text-align: center;
+            color: var(--muted-gray);
+            font-size: 12px;
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="6" fill="#6A5AE0"/>
+                <path d="M7 12L10 15L17 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            SmartHire
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                Dashboard
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                JD Version
+            </div>
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                Resume Upload
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                Analysis Result
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="page-title">Bulk Upload Progress</div>
+            <div class="header-right">
+                <div class="avatar">S</div>
+            </div>
+        </header>
+
+        <div class="content-scroll">
+            <div class="progress-container">
+                <h1 class="section-heading">Bulk Upload Progress</h1>
+
+                <!-- 12.2 Overall Upload Progress -->
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <div class="progress-info">
+                            <h2>Overall Upload Progress</h2>
+                            <p>Monitor the status of your bulk resume upload.</p>
+                        </div>
+                        <div class="progress-stats">
+                            <div class="percentage">75%</div>
+                            <div class="count-text">375 of 500 files</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-track">
+                        <div class="progress-fill"></div>
+                    </div>
+
+                    <div class="status-text">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                        Processing...
+                    </div>
+
+                    <!-- 12.3 Action Buttons -->
+                    <div class="action-row">
+                        <button class="btn btn-secondary">Cancel Upload</button>
+                        <button class="btn btn-primary" disabled>Go to Resume Selection</button>
+                    </div>
+                </div>
+
+                <!-- 12.4 Individual File Status -->
+                <div class="file-status-header">
+                    <h2 style="font-size: 18px; font-weight: 700;">Individual File Status</h2>
+                    <div style="display: flex; gap: 15px;">
+                        <div class="search-box">
+                            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" class="search-input" placeholder="Search file names">
+                        </div>
+                        <select class="filter-select">
+                            <option value="all">Status: All</option>
+                            <option value="completed">Completed</option>
+                            <option value="progress">In Progress</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 12.5 Status Table -->
+                <div class="status-table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Status</th>
+                                <th>Last Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>resume_john_doe.pdf</td>
+                                <td><span class="status-badge status-completed"><span class="dot"></span>Completed</span></td>
+                                <td>Today, 10:42 AM</td>
+                            </tr>
+                            <tr>
+                                <td>resume_sarah_smith.pdf</td>
+                                <td><span class="status-badge status-completed"><span class="dot"></span>Completed</span></td>
+                                <td>Today, 10:42 AM</td>
+                            </tr>
+                            <tr>
+                                <td>resume_mike_ross.pdf</td>
+                                <td><span class="status-badge status-progress"><span class="dot"></span>In Progress</span></td>
+                                <td>Today, 10:43 AM</td>
+                            </tr>
+                            <tr>
+                                <td>resume_invalid_format.docx</td>
+                                <td><span class="status-badge status-failed"><span class="dot"></span>Failed</span></td>
+                                <td>Today, 10:41 AM</td>
+                            </tr>
+                            <tr>
+                                <td>resume_priya_patel.pdf</td>
+                                <td><span class="status-badge status-progress"><span class="dot"></span>In Progress</span></td>
+                                <td>Today, 10:43 AM</td>
+                            </tr>
+                            <tr>
+                                <td>resume_alex_chen.pdf</td>
+                                <td><span class="status-badge status-completed"><span class="dot"></span>Completed</span></td>
+                                <td>Today, 10:40 AM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 12.7 Footer -->
+                <div class="footer-copyright">
+                    © 2026 SmartHire. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

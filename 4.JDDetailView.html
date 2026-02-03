@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JD Detail View - SmartHire</title>
+    <style>
+        /* --------------------------------------------------
+           VARIABLES & RESET
+           -------------------------------------------------- */
+        :root {
+            --primary-purple: #6A5AE0;
+            --primary-hover: #5648B8;
+            --light-lavender: #E9E6FA;
+            --soft-blue: #5DA9E9;
+            --success-green: #4CAF50;
+            --warning-orange: #F5A623;
+            --error-red: #E74C3C;
+            --dark-text: #2E2E2E;
+            --muted-gray: #8A8A8A;
+            --card-bg: #FFFFFF;
+            --page-bg: #F6F5FB;
+            --border-color: #E0E0E0;
+            
+            --sidebar-width: 260px;
+            --header-height: 70px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--page-bg);
+            color: var(--dark-text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* --------------------------------------------------
+           SIDEBAR
+           -------------------------------------------------- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            padding: 0 24px 30px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-purple);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--muted-gray);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--page-bg);
+            color: var(--primary-purple);
+        }
+
+        .nav-item.active {
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* --------------------------------------------------
+           MAIN CONTENT
+           -------------------------------------------------- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-header {
+            height: var(--header-height);
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* --------------------------------------------------
+           JD DETAIL CONTENT
+           -------------------------------------------------- */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .detail-container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted-gray);
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+            width: fit-content;
+        }
+
+        .back-link:hover {
+            color: var(--primary-purple);
+        }
+
+        .jd-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .jd-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .jd-title-group h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 8px;
+        }
+
+        .version-badge {
+            background-color: #E8F5E9;
+            color: var(--success-green);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--muted-gray);
+            margin-bottom: 12px;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .jd-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #4A4A4A;
+        }
+
+        .jd-list {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .jd-list li {
+            margin-bottom: 8px;
+            color: #4A4A4A;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background-color: #F5F7FA;
+            border: 1px solid #E0E0E0;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+
+        .footer-copyright {
+            text-align: center;
+            color: var(--muted-gray);
+            font-size: 12px;
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }
+
+        /* --------------------------------------------------
+           EDIT MODE STYLES
+           -------------------------------------------------- */
+        .editable-section {
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .editable-section.edit-mode {
+            background-color: #F9F7FF;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed var(--primary-purple);
+        }
+
+        .edit-icon {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            background-color: var(--primary-purple);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            z-index: 10;
+        }
+
+        .edit-icon:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .editable-section.edit-mode .edit-icon {
+            display: flex;
+        }
+
+        .global-action-buttons {
+            display: none;
+            gap: 12px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            justify-content: flex-end;
+            position: sticky;
+            bottom: 20px;
+            background: white;
+            padding-bottom: 20px;
+            z-index: 50;
+        }
+
+        .global-action-buttons.show {
+            display: flex;
+        }
+
+        .btn-update {
+            background-color: var(--success-green);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-update:hover {
+            background-color: #45a049;
+        }
+
+        .btn-cancel {
+            background-color: var(--muted-gray);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #6A6A6A;
+        }
+
+        .editable-content {
+            display: none;
+        }
+
+        .editable-content.show {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="6" fill="#6A5AE0"/>
+                <path d="M7 12L10 15L17 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            SmartHire
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                Dashboard
+            </div>
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                JD Version
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                Resume Upload
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                Analysis Result
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="page-title">JD Detail View</div>
+            <div class="header-right">
+                <div class="avatar">S</div>
+            </div>
+        </header>
+
+        <div class="content-scroll">
+            <div class="detail-container">
+                <!-- 10.1 Back Navigation -->
+                <a href="#" class="back-link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Back to JD List
+                </a>
+
+                <div class="jd-card">
+                    <!-- 10.2 Job Overview Section -->
+                    <div class="jd-header-row">
+                        <div class="jd-title-group">
+                            <h1>AI/ML Engineer</h1>
+                            <span class="version-badge">Version 1.2.0 (Latest)</span>
+                        </div>
+                        <button class="btn-primary" id="editBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <span id="editBtnText">Edit this JD</span>
+                        </button>
+                    </div>
+
+                    <!-- 10.3 Job Description Content -->
+                    <!-- Job Summary Section -->
+                    <div class="editable-section" data-section="job-summary">
+                        <div class="section-title">Job Summary
+                            <button class="edit-icon" title="Edit this section">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                        </div>
+                        <p class="jd-text">
+                            We are seeking a highly skilled Senior AI/ML Engineer to join our dynamic team. The ideal candidate will have extensive experience in designing, building, and deploying machine learning models at scale. You will work closely with data scientists, software engineers, and product managers to deliver AI-driven solutions that solve complex business problems.
+                        </p>
+                    </div>
+
+                    <!-- Responsibilities Section -->
+                    <div class="editable-section" data-section="responsibilities">
+                        <div class="section-title">Responsibilities
+                            <button class="edit-icon" title="Edit this section">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                        </div>
+                        <ul class="jd-list">
+                            <li>Lead design and development of AI/ML models</li>
+                            <li>Build and maintain scalable ML pipelines</li>
+                            <li>Select suitable machine learning algorithms</li>
+                            <li>Perform experimentation and validation</li>
+                            <li>Collaborate with data science and engineering teams</li>
+                        </ul>
+                    </div>
+
+                    <!-- Key Skills Section -->
+                    <div class="editable-section" data-section="key-skills">
+                        <div class="section-title">Key Skills
+                            <button class="edit-icon" title="Edit this section">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="skills-container">
+                            <span class="skill-tag">Natural Language Processing (NLP)</span>
+                            <span class="skill-tag">Machine Learning (ML)</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">TensorFlow</span>
+                            <span class="skill-tag">PyTorch</span>
+                            <span class="skill-tag">Scikit-learn</span>
+                            <span class="skill-tag">Hugging Face</span>
+                            <span class="skill-tag">Cloud Platforms (AWS, Azure, GCP)</span>
+                            <span class="skill-tag">MLOps</span>
+                            <span class="skill-tag">Data Analysis</span>
+                            <span class="skill-tag">Problem Solving</span>
+                            <span class="skill-tag">Communication Skills</span>
+                        </div>
+                    </div>
+
+                    <!-- Experience Requirements Section -->
+                    <div class="editable-section" data-section="experience-requirements">
+                        <div class="section-title">Experience Requirements
+                            <button class="edit-icon" title="Edit this section">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                        </div>
+                        <ul class="jd-list">
+                            <li>5+ years of professional experience in AI/ML solution development</li>
+                            <li>Proven experience in building and maintaining production systems</li>
+                        </ul>
+                    </div>
+
+                    <!-- Global Action Buttons -->
+                    <div class="global-action-buttons" id="globalActionButtons">
+                        <button class="btn-update" id="globalUpdateBtn">Update</button>
+                        <button class="btn-cancel" id="globalCancelBtn">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- 10.6 Footer Section -->
+                <div class="footer-copyright">
+                    © 2026 SmartHire. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Edit Mode Functionality
+        const editBtn = document.getElementById('editBtn');
+        const editBtnText = document.getElementById('editBtnText');
+        const editableSections = document.querySelectorAll('.editable-section');
+        const globalActionButtons = document.getElementById('globalActionButtons');
+        const globalUpdateBtn = document.getElementById('globalUpdateBtn');
+        const globalCancelBtn = document.getElementById('globalCancelBtn');
+        let isEditMode = false;
+
+        // Toggle edit mode
+        editBtn.addEventListener('click', function() {
+            isEditMode = !isEditMode;
+            
+            if (isEditMode) {
+                editBtnText.textContent = 'Cancel Editing';
+                editBtn.style.backgroundColor = 'var(--error-red)';
+                activateEditMode();
+            } else {
+                editBtnText.textContent = 'Edit this JD';
+                editBtn.style.backgroundColor = 'var(--primary-purple)';
+                deactivateEditMode();
+            }
+        });
+
+        // Activate edit mode for all sections
+        function activateEditMode() {
+            editableSections.forEach(section => {
+                section.classList.add('edit-mode');
+                
+                // Add event listeners to edit icons
+                const editIcon = section.querySelector('.edit-icon');
+                if (editIcon) {
+                    editIcon.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        editSection(section);
+                    });
+                }
+            });
+
+            // Show global action buttons
+            globalActionButtons.classList.add('show');
+        }
+
+        // Deactivate edit mode
+        function deactivateEditMode() {
+            editableSections.forEach(section => {
+                section.classList.remove('edit-mode');
+                section.style.boxShadow = 'none';
+            });
+
+            // Hide global action buttons
+            globalActionButtons.classList.remove('show');
+        }
+
+        // Edit a specific section
+        function editSection(section) {
+            console.log('Editing section:', section.getAttribute('data-section'));
+            // Highlight the section being edited
+            section.style.boxShadow = '0 0 0 2px var(--primary-purple)';
+            // Here you can add code to enable inline editing (e.g., contenteditable, form fields, etc.)
+        }
+
+        // Update all changes
+        globalUpdateBtn.addEventListener('click', function() {
+            console.log('Updating all changes');
+            
+            // Collect all edited sections
+            const editedSections = [];
+            editableSections.forEach(section => {
+                editedSections.push({
+                    section: section.getAttribute('data-section'),
+                    content: section.innerHTML
+                });
+            });
+            
+            // You can send all changes to server here
+            console.log('Sections to update:', editedSections);
+            alert('All changes have been updated successfully!');
+            
+            // Reset edit mode
+            isEditMode = false;
+            editBtnText.textContent = 'Edit this JD';
+            editBtn.style.backgroundColor = 'var(--primary-purple)';
+            deactivateEditMode();
+        });
+
+        // Cancel all changes
+        globalCancelBtn.addEventListener('click', function() {
+            console.log('Canceling all changes');
+            
+            if (confirm('Are you sure you want to cancel all changes?')) {
+                // Reset edit mode
+                isEditMode = false;
+                editBtnText.textContent = 'Edit this JD';
+                editBtn.style.backgroundColor = 'var(--primary-purple)';
+                deactivateEditMode();
+            }
+        });
+    </script>
+</body>
+</html>

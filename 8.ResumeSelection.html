@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Resumes - SmartHire</title>
+    <style>
+        /* --------------------------------------------------
+           VARIABLES & RESET
+           -------------------------------------------------- */
+        :root {
+            --primary-purple: #6A5AE0;
+            --primary-hover: #5648B8;
+            --light-lavender: #E9E6FA;
+            --soft-blue: #5DA9E9;
+            --success-green: #4CAF50;
+            --warning-orange: #F5A623;
+            --error-red: #E74C3C;
+            --dark-text: #2E2E2E;
+            --muted-gray: #8A8A8A;
+            --card-bg: #FFFFFF;
+            --page-bg: #F6F5FB;
+            --border-color: #E0E0E0;
+            
+            --sidebar-width: 260px;
+            --header-height: 70px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--page-bg);
+            color: var(--dark-text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* --------------------------------------------------
+           SIDEBAR
+           -------------------------------------------------- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            padding: 0 24px 30px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-purple);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--muted-gray);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--page-bg);
+            color: var(--primary-purple);
+        }
+
+        .nav-item.active {
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* --------------------------------------------------
+           MAIN CONTENT
+           -------------------------------------------------- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-header {
+            height: var(--header-height);
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-lavender);
+            color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* --------------------------------------------------
+           RESUME SELECTION CONTENT
+           -------------------------------------------------- */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .selection-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-heading {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--dark-text);
+        }
+
+        /* 14.2 Selected JD Section */
+        .jd-context-bar {
+            background: linear-gradient(90deg, #FFFFFF 0%, #F8F7FC 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .jd-info-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .jd-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--muted-gray);
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .jd-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+
+        .version-badge {
+            background-color: #E8F5E9;
+            color: var(--success-green);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .lock-icon {
+            color: var(--muted-gray);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        /* 14.3 Search & Action Bar */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .search-filter-group {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-purple);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-gray);
+        }
+
+        .icon-btn-secondary {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--dark-text);
+            transition: all 0.2s;
+        }
+
+        .icon-btn-secondary:hover {
+            border-color: var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .btn-primary-gradient {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, #5648B8 100%);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(106, 90, 224, 0.2);
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        .btn-primary-gradient:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(106, 90, 224, 0.3);
+        }
+
+        /* 14.4 Resume List */
+        .resume-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .resume-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .resume-card:hover {
+            border-color: var(--primary-purple);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+        }
+
+        .resume-card.selected {
+            background: linear-gradient(to right, #FDFDFF, #F6F5FB);
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 1px var(--primary-purple) inset;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-purple);
+            cursor: pointer;
+        }
+
+        .resume-info {
+            flex: 1;
+        }
+
+        .resume-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .candidate-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+
+        .upload-time {
+            font-size: 12px;
+            color: var(--muted-gray);
+        }
+
+        .candidate-email {
+            font-size: 13px;
+            color: var(--muted-gray);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .resume-summary {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .status-new { background-color: #E3F2FD; color: #1976D2; }
+        .status-analysed { background-color: #F5F5F5; color: var(--muted-gray); }
+
+        /* Footer */
+        .footer-copyright {
+            text-align: center;
+            color: var(--muted-gray);
+            font-size: 12px;
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="6" fill="#6A5AE0"/>
+                <path d="M7 12L10 15L17 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            SmartHire
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                Dashboard
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                JD Version
+            </div>
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                Resume Upload
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                Analysis Result
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="page-title">Select Resumes for Analysis</div>
+            <div class="header-right">
+                <div class="avatar">S</div>
+            </div>
+        </header>
+
+        <div class="content-scroll">
+            <div class="selection-container">
+                <h1 class="section-heading">Select Resumes for Analysis</h1>
+
+                <!-- 14.2 Selected Job Description -->
+                <div class="jd-context-bar">
+                    <div class="jd-info-group">
+                        <span class="jd-label">Selected Job Description</span>
+                        <span class="jd-title">AI/ML Engineer</span>
+                        <span class="version-badge">v2.1</span>
+                    </div>
+                    <div class="lock-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        Locked
+                    </div>
+                </div>
+
+                <!-- 14.3 Search, Filter & Action Bar -->
+                <div class="action-bar">
+                    <div class="search-filter-group">
+                        <div class="search-box">
+                            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" class="search-input" placeholder="Search resumes by name">
+                        </div>
+                        <button class="icon-btn-secondary" title="Filter">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                        </button>
+                        <button class="icon-btn-secondary" title="Sort">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                        </button>
+                    </div>
+                    <button class="btn-primary-gradient">
+                        Start Analysis (2)
+                    </button>
+                </div>
+
+                <!-- 14.4 Resume List Section -->
+                <div class="resume-list">
+                    <!-- Card 1: John Doe (Selected) -->
+                    <div class="resume-card selected">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="resume-info">
+                            <div class="resume-header">
+                                <span class="candidate-name">John Doe</span>
+                                <span class="upload-time">Today, 10:42 AM</span>
+                            </div>
+                            <span class="candidate-email">john.doe@example.com</span>
+                            <p class="resume-summary">Experienced React Developer with 5+ years in building scalable frontend applications. Proficient in Redux, TypeScript, and modern UI libraries.</p>
+                        </div>
+                        <span class="status-badge status-new">New</span>
+                    </div>
+
+                    <!-- Card 2: Jane Smith -->
+                    <div class="resume-card">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                        </div>
+                        <div class="resume-info">
+                            <div class="resume-header">
+                                <span class="candidate-name">Jane Smith</span>
+                                <span class="upload-time">Yesterday</span>
+                            </div>
+                            <span class="candidate-email">jane.smith@example.com</span>
+                            <p class="resume-summary">Frontend Engineer specializing in React and Vue.js. Strong background in UX design and accessibility standards.</p>
+                        </div>
+                        <span class="status-badge status-analysed">Analysed</span>
+                    </div>
+
+                    <!-- Card 3: Peter Jones (Selected) -->
+                    <div class="resume-card selected">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="resume-info">
+                            <div class="resume-header">
+                                <span class="candidate-name">Peter Jones</span>
+                                <span class="upload-time">Today, 09:15 AM</span>
+                            </div>
+                            <span class="candidate-email">peter.jones@example.com</span>
+                            <p class="resume-summary">Full Stack Developer transitioning to Frontend focus. Experience with React Native and Node.js backends.</p>
+                        </div>
+                        <span class="status-badge status-new">New</span>
+                    </div>
+
+                    <!-- Card 4: Alice Brown -->
+                    <div class="resume-card">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                        </div>
+                        <div class="resume-info">
+                            <div class="resume-header">
+                                <span class="candidate-name">Alice Brown</span>
+                                <span class="upload-time">2 days ago</span>
+                            </div>
+                            <span class="candidate-email">alice.brown@example.com</span>
+                            <p class="resume-summary">Junior React Developer with a passion for clean code and component-driven development. Recent bootcamp graduate.</p>
+                        </div>
+                        <span class="status-badge status-new">New</span>
+                    </div>
+
+                    <!-- Card 5: Robert White -->
+                    <div class="resume-card">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                        </div>
+                        <div class="resume-info">
+                            <div class="resume-header">
+                                <span class="candidate-name">Robert White</span>
+                                <span class="upload-time">3 days ago</span>
+                            </div>
+                            <span class="candidate-email">robert.white@example.com</span>
+                            <p class="resume-summary">Senior UI Engineer with extensive experience in React, Next.js, and performance optimization for high-traffic sites.</p>
+                        </div>
+                        <span class="status-badge status-analysed">Analysed</span>
+                    </div>
+                </div>
+
+                <!-- 14.7 Footer -->
+                <div class="footer-copyright">
+                    © 2026 SmartHire. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

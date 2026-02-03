@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Management - SmartHire</title>
+    <style>
+        /* --------------------------------------------------
+           VARIABLES & RESET (Based on ResumeSelection.html)
+           -------------------------------------------------- */
+        :root {
+            --primary-purple: #6A5AE0;
+            --primary-hover: #5648B8;
+            --light-lavender: #E9E6FA;
+            --soft-blue: #5DA9E9;
+            --success-green: #4CAF50;
+            --warning-orange: #F5A623;
+            --error-red: #E74C3C;
+            --dark-text: #2E2E2E;
+            --muted-gray: #8A8A8A;
+            --card-bg: #FFFFFF;
+            --page-bg: #F6F5FB;
+            --border-color: #E0E0E0;
+            
+            --sidebar-width: 260px;
+            --header-height: 70px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--page-bg); color: var(--dark-text); display: flex; height: 100vh; overflow: hidden; }
+        a { text-decoration: none; color: inherit; }
+
+        /* --------------------------------------------------
+           SIDEBAR
+           -------------------------------------------------- */
+        .sidebar { width: var(--sidebar-width); background-color: var(--card-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; z-index: 100; }
+        .logo-area { padding: 0 24px 30px; font-size: 24px; font-weight: 800; color: var(--primary-purple); letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
+        .nav-menu { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; color: var(--muted-gray); font-weight: 500; cursor: pointer; transition: all 0.2s ease; }
+        .nav-item:hover { background-color: var(--page-bg); color: var(--primary-purple); }
+        .nav-item.active { background-color: var(--light-lavender); color: var(--primary-purple); }
+        .nav-item svg { width: 20px; height: 20px; fill: currentColor; }
+
+        /* --------------------------------------------------
+           MAIN CONTENT
+           -------------------------------------------------- */
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .top-header { height: var(--header-height); background-color: var(--card-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; flex-shrink: 0; }
+        .page-title { font-size: 18px; font-weight: 600; }
+        .header-right { display: flex; align-items: center; gap: 24px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background-color: var(--light-lavender); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .icon-btn { background: none; border: none; cursor: pointer; color: var(--muted-gray); position: relative; }
+        .notification-dot { position: absolute; top: 0; right: 0; width: 8px; height: 8px; background-color: var(--error-red); border-radius: 50%; border: 2px solid var(--card-bg); }
+
+        /* --------------------------------------------------
+           CANDIDATE MANAGEMENT CONTENT
+           -------------------------------------------------- */
+        .content-scroll { flex: 1; overflow-y: auto; padding: 30px; }
+        .container { max-width: 1200px; margin: 0 auto; width: 100%; }
+        
+        .page-header { margin-bottom: 30px; }
+        .page-heading { font-size: 24px; font-weight: 700; color: var(--dark-text); margin-bottom: 8px; }
+        .page-desc { font-size: 14px; color: var(--muted-gray); }
+
+        /* Filters */
+        .filter-bar { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); flex-wrap: wrap; }
+        .search-box { position: relative; flex: 1; min-width: 250px; }
+        .search-input { width: 100%; padding: 10px 16px 10px 40px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        .search-input:focus { border-color: var(--primary-purple); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted-gray); }
+        .filter-dropdown { padding: 10px 16px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; color: var(--dark-text); background-color: white; cursor: pointer; min-width: 140px; }
+        .btn-reset { background: none; border: none; color: var(--muted-gray); font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: underline; }
+        .btn-reset:hover { color: var(--error-red); }
+        .btn-view-options { background-color: white; border: 1px solid var(--border-color); color: var(--dark-text); padding: 10px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .btn-view-options:hover { border-color: var(--primary-purple); color: var(--primary-purple); }
+
+        /* Table */
+        .table-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 16px 24px; background-color: #FAFAFA; border-bottom: 1px solid var(--border-color); font-size: 12px; text-transform: uppercase; color: var(--muted-gray); font-weight: 600; cursor: pointer; user-select: none; }
+        th:hover { background-color: #F0F0F0; color: var(--dark-text); }
+        td { padding: 16px 24px; border-bottom: 1px solid var(--border-color); font-size: 14px; color: var(--dark-text); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background-color: #F9F9FF; }
+        
+        .checkbox-cell { width: 40px; text-align: center; padding-right: 0; }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-purple); cursor: pointer; }
+        
+        .candidate-name { font-weight: 600; color: var(--primary-purple); cursor: pointer; }
+        .candidate-name:hover { text-decoration: underline; }
+        
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+        .badge-fit { background-color: #E8F5E9; color: var(--success-green); }
+        .badge-unfit { background-color: #FFEBEE; color: var(--error-red); }
+        .badge-info { background-color: #FFF3E0; color: var(--warning-orange); }
+
+        .score-val { font-weight: 700; }
+        .action-btn { background: none; border: none; cursor: pointer; color: var(--muted-gray); padding: 4px; border-radius: 4px; }
+        .action-btn:hover { background-color: #F0F0F0; color: var(--dark-text); }
+
+        /* Pagination */
+        .pagination { padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); background-color: #FAFAFA; }
+        .page-info { font-size: 13px; color: var(--muted-gray); }
+        .page-controls { display: flex; gap: 8px; }
+        .page-btn { width: 32px; height: 32px; border: 1px solid var(--border-color); background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted-gray); font-size: 13px; transition: all 0.2s; }
+        .page-btn.active { background-color: var(--primary-purple); color: white; border-color: var(--primary-purple); }
+        .page-btn:hover:not(.active) { border-color: var(--primary-purple); color: var(--primary-purple); }
+
+        /* Footer */
+        .footer-copyright { text-align: center; color: var(--muted-gray); font-size: 12px; margin-top: 40px; padding-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="6" fill="#6A5AE0"/>
+                <path d="M7 12L10 15L17 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            SmartHire
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg> Dashboard</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> JD Version</div>
+            <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg> Resume Upload</div>
+            <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg> Analysis Result</div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="page-title">Candidate Management</div>
+            <div class="header-right">
+                <button class="icon-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="notification-dot"></span>
+                </button>
+                <div class="avatar">S</div>
+            </div>
+        </header>
+
+        <div class="content-scroll">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-heading">Candidate Management</h1>
+                    <p class="page-desc">View, filter, and manage all candidate applications</p>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="search-box">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" class="search-input" placeholder="Search Candidates">
+                    </div>
+                    <select class="filter-dropdown">
+                        <option value="">Status: All</option>
+                        <option value="fit">Fit</option>
+                        <option value="unfit">Unfit</option>
+                        <option value="info">Need More Info</option>
+                    </select>
+                    <select class="filter-dropdown">
+                        <option value="">Score: All</option>
+                        <option value="90">90% +</option>
+                        <option value="80">80% - 90%</option>
+                    </select>
+                    <select class="filter-dropdown">
+                        <option value="">Applied JD: All</option>
+                        <option value="se">Senior Software Engineer</option>
+                        <option value="pm">Product Manager</option>
+                    </select>
+                    <select class="filter-dropdown">
+                        <option value="">Date Applied: All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                    </select>
+                    <button class="btn-view-options">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                        View Options
+                    </button>
+                    <button class="btn-reset">Reset Filters</button>
+                </div>
+
+                <!-- Table -->
+                <div class="table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="checkbox-cell"><input type="checkbox"></th>
+                                <th>Candidate Name <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-left:4px;"><path d="M7 15l5 5 5-5"></path><path d="M7 9l5-5 5 5"></path></svg></th>
+                                <th>Status</th>
+                                <th>Matching Score</th>
+                                <th>Applied JD</th>
+                                <th>Date Applied</th>
+                                <th>Last Activity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="checkbox-cell"><input type="checkbox"></td>
+                                <td><span class="candidate-name">John Doe</span></td>
+                                <td><span class="badge badge-fit">Fit</span></td>
+                                <td><span class="score-val">92%</span></td>
+                                <td>Senior Software Engineer</td>
+                                <td>Oct 24, 2025</td>
+                                <td>2 hours ago</td>
+                                <td><button class="action-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox-cell"><input type="checkbox"></td>
+                                <td><span class="candidate-name">Sarah Connor</span></td>
+                                <td><span class="badge badge-fit">Fit</span></td>
+                                <td><span class="score-val">88%</span></td>
+                                <td>Product Manager</td>
+                                <td>Oct 22, 2025</td>
+                                <td>1 day ago</td>
+                                <td><button class="action-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox-cell"><input type="checkbox"></td>
+                                <td><span class="candidate-name">Michael Smith</span></td>
+                                <td><span class="badge badge-unfit">Unfit</span></td>
+                                <td><span class="score-val">45%</span></td>
+                                <td>Senior Software Engineer</td>
+                                <td>Oct 20, 2025</td>
+                                <td>3 days ago</td>
+                                <td><button class="action-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox-cell"><input type="checkbox"></td>
+                                <td><span class="candidate-name">Emily Blunt</span></td>
+                                <td><span class="badge badge-fit">Fit</span></td>
+                                <td><span class="score-val">95%</span></td>
+                                <td>Data Scientist</td>
+                                <td>Oct 15, 2025</td>
+                                <td>5 hours ago</td>
+                                <td><button class="action-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></td>
+                            </tr>
+                            <tr>
+                                <td class="checkbox-cell"><input type="checkbox"></td>
+                                <td><span class="candidate-name">David Kim</span></td>
+                                <td><span class="badge badge-info">Need More Info</span></td>
+                                <td><span class="score-val">78%</span></td>
+                                <td>Product Manager</td>
+                                <td>Oct 24, 2025</td>
+                                <td>Just now</td>
+                                <td><button class="action-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <div class="page-info">Showing <strong>1-5</strong> of <strong>42</strong> candidates</div>
+                        <div class="page-controls">
+                            <button class="page-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn">...</button>
+                            <button class="page-btn">9</button>
+                            <button class="page-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="footer-copyright">
+                    © 2026 SmartHire. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
