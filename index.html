@@ -2026,7 +2026,7 @@ input[type="range"] {
                 <div class="welcome-section">
                     <h1>Welcome to SmartHire</h1>
                     <p>Streamline your recruitment process with AI-powered insights.</p>
-                    <a href="dashboard.html" class="dashboard-btn" style="margin-top: 20px;">Go to Dashboard</a>
+                    <a href="dashboard_standalone.html" class="dashboard-btn" style="margin-top: 20px;">Go to Dashboard</a>
                 </div>
 
                 <h2>Quick Actions</h2>
@@ -3250,6 +3250,60 @@ document.addEventListener('DOMContentLoaded', () => {
             notifyDiv.style.transition = 'opacity 0.5s';
             setTimeout(() => notifyDiv.remove(), 500);
         }, 3000);
+    }
+
+    // Export Results Simulation
+    const btnExport = document.getElementById('btn-export-results');
+    const exportPreviewModal = document.getElementById('export-preview-modal');
+    const closeExportBtn = document.querySelector('.close-export-modal');
+    const closeExportBtn2 = document.querySelector('.close-export-modal-btn');
+    const btnConfirmExport = document.getElementById('btn-confirm-export');
+    const exportPreviewBody = document.getElementById('export-preview-body');
+
+    if (btnExport && exportPreviewModal) {
+        btnExport.addEventListener('click', () => {
+            populateExportPreview();
+            exportPreviewModal.style.display = 'block';
+        });
+
+        if (closeExportBtn) closeExportBtn.addEventListener('click', () => exportPreviewModal.style.display = 'none');
+        if (closeExportBtn2) closeExportBtn2.addEventListener('click', () => exportPreviewModal.style.display = 'none');
+        window.addEventListener('click', (e) => {
+            if (e.target == exportPreviewModal) exportPreviewModal.style.display = 'none';
+        });
+
+        if (btnConfirmExport) {
+            btnConfirmExport.addEventListener('click', () => {
+                const originalText = btnConfirmExport.innerHTML;
+                btnConfirmExport.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Syncing to Sheets...';
+                btnConfirmExport.disabled = true;
+
+                setTimeout(() => {
+                    exportPreviewModal.style.display = 'none';
+                    showTopNotification("Results Synced to Google Sheets Successfully!");
+                    btnConfirmExport.innerHTML = originalText;
+                    btnConfirmExport.disabled = false;
+                }, 2000);
+            });
+        }
+    }
+
+    function populateExportPreview() {
+        if (!exportPreviewBody) return;
+        exportPreviewBody.innerHTML = '';
+
+        mockCandidates.forEach(candidate => {
+            const row = `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 10px;">${candidate.name}</td>
+                    <td style="padding: 10px;"><span style="color:${getHrStatusColor(candidate.hrStatus)}">${candidate.hrStatus}</span></td>
+                    <td style="padding: 10px;">${candidate.aiStatus}</td>
+                    <td style="padding: 10px;"><strong>${candidate.overall}</strong></td>
+                    <td style="padding: 10px;">${candidate.city}</td>
+                </tr>
+            `;
+            exportPreviewBody.insertAdjacentHTML('beforeend', row);
+        });
     }
 
     if (btnStartAnalysis) {
