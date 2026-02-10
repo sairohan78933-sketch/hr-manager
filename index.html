@@ -2638,7 +2638,7 @@
                                 </th>
                                 <th style="position: relative; padding: 15px;">
                                     <div class="th-content">
-                                        Name
+                                        Duplicate Resume
                                         <i class="fa-solid fa-magnifying-glass filter-icon"
                                             onclick="toggleFilter('dup-name-filter')"></i>
                                     </div>
@@ -3190,7 +3190,7 @@
     </div>
 
     <!-- Duplicate Detection Modal -->
-    <div id="duplicate-detection-modal" class="modal">
+    <div id="duplicate-detection-modal" class="modal" style="z-index: 2000;">
         <div class="modal-content" style="max-width: 700px; width: 95%; border-radius: 12px; overflow: hidden;">
             <div class="modal-header"
                 style="background: #fef3c7; color: #92400e; border-bottom: 1px solid #fde68a; padding: 20px 25px;">
@@ -3236,7 +3236,7 @@
                 style="padding: 20px 25px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 12px; background: #fff;">
                 <button id="btn-continue-after-duplicates" class="btn-primary"
                     style="padding: 10px 30px; border-radius: 6px; border: none; background: #4f46e5; color: #fff; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-arrow-right"></i> Continue with Unique Candidates
+                    <i class="fa-solid fa-arrow-right"></i> Continue
                 </button>
             </div>
         </div>
@@ -3305,7 +3305,8 @@
         const processedCandidatesDB = [
             { email: 'rohan.m@example.com', phone: null, name: 'Rohan Mehta', jdVersion: 'v1.0' },
             { email: null, phone: '7989555308', name: 'Likith K', jdVersion: 'v1.1' },
-            { email: 'amit.k88@gmail.com', phone: null, name: 'Amit Kumar', jdVersion: 'v2.0' }
+            { email: 'amit.k88@gmail.com', phone: null, name: 'Amit Kumar', jdVersion: 'v2.0' },
+            { email: 'aarav@example.com', phone: null, name: 'Aarav Sharma', jdVersion: 'v2.1' }
         ];
 
         const quotes = [
@@ -5238,12 +5239,56 @@
                 if (!grid) return;
 
                 const role = jdRoleSelect ? jdRoleSelect.value : "AI/ML Engineer";
-                const ver = document.getElementById('current-jd-version')?.textContent || "v2.1";
-                document.querySelectorAll('.current-jd-version-full').forEach(el => el.textContent = `${ver} - ${role}`);
+                const verText = document.getElementById('current-jd-version')?.textContent || "v2.1";
+                const ver = verText.split(' ')[0];
+                document.querySelectorAll('.current-jd-version-full').forEach(el => el.textContent = `${verText} - ${role}`);
 
                 if (!retryIds) {
-                    const selectedCandidates = mockCandidates.filter(c => selectedAnalysisIds.includes(c.id));
-                    currentAnalysisStats = selectedCandidates.map(c => ({
+                    const allSelected = mockCandidates.filter(c => selectedAnalysisIds.includes(c.id));
+                    const duplicates = [];
+                    const uniqueCandidates = [];
+
+                    allSelected.forEach(c => {
+                        const isDuplicate = processedCandidatesDB.find(pc =>
+                            (pc.email && pc.email === c.email) ||
+                            (pc.phone && pc.phone === c.phone)
+                        );
+                        if (isDuplicate) {
+                            duplicates.push({ ...c, detectedBy: isDuplicate.email || isDuplicate.phone || "Previous Records" });
+                        } else {
+                            uniqueCandidates.push(c);
+                        }
+                    });
+
+                    if (duplicates.length > 0) {
+                        // Record duplicates in dashboard table
+                        duplicates.forEach(dup => {
+                            if (!mockDuplicateCandidates.find(md => md.email === dup.email)) {
+                                mockDuplicateCandidates.push({
+                                    id: mockDuplicateCandidates.length + 1,
+                                    name: dup.name,
+                                    detectedBy: dup.detectedBy,
+                                    originalResume: `${dup.name.replace(' ', '_')}_Resume.pdf`,
+                                    uploadedBy: 'Sarah Jenkins',
+                                    uploadedOn: new Date().toISOString().split('T')[0],
+                                    jdVersion: ver,
+                                    city: dup.city,
+                                    exp: dup.exp,
+                                    skillScore: dup.skillScore,
+                                    phone: dup.phone,
+                                    email: dup.email
+                                });
+                            }
+                        });
+                        renderDuplicateCandidatesTable();
+
+                        // Set 4s notification delay
+                        setTimeout(() => {
+                            openDuplicateDetectionModal(duplicates);
+                        }, 4000);
+                    }
+
+                    currentAnalysisStats = uniqueCandidates.map(c => ({
                         ...c,
                         progress: 0,
                         status: 'pending',
@@ -5308,6 +5353,33 @@
                             }
                         }
                     }, 100);
+                });
+            }
+
+            function openDuplicateDetectionModal(duplicates) {
+                const modal = document.getElementById('duplicate-detection-modal');
+                const tableBody = document.getElementById('duplicate-detection-table-body');
+                if (!modal || !tableBody) return;
+
+                tableBody.innerHTML = '';
+                duplicates.forEach((d, idx) => {
+                    tableBody.insertAdjacentHTML('beforeend', `
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 12px; font-size: 0.9rem;">${idx + 1}</td>
+                            <td style="padding: 12px; font-size: 0.9rem; font-weight:600; color:#1e293b;">${d.name}</td>
+                            <td style="padding: 12px; font-size: 0.9rem; color:#64748b;">${d.detectedBy}</td>
+                        </tr>
+                    `);
+                });
+
+                modal.style.display = 'block';
+            }
+
+            const btnContinueDuplicates = document.getElementById('btn-continue-after-duplicates');
+            if (btnContinueDuplicates) {
+                btnContinueDuplicates.addEventListener('click', () => {
+                    const modal = document.getElementById('duplicate-detection-modal');
+                    if (modal) modal.style.display = 'none';
                 });
             }
 
@@ -6533,6 +6605,20 @@
                 document.getElementById('user-profile-dropdown').style.display = 'none';
             });
         }
+
+        // Close Modal
+        closeProfileBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                editProfileModal.style.display = 'none';
+            });
+        });
+
+        // Backdrop Click to Close
+        window.addEventListener('click', (e) => {
+            if (e.target == editProfileModal) {
+                editProfileModal.style.display = 'none';
+            }
+        });
 
         // Back button from results preview to analysis status
         const btnBackFromPreview = document.getElementById('btn-back-from-preview');
