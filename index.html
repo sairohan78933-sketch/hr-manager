@@ -2340,53 +2340,54 @@
                 .jd-request-icon {
                     position: relative;
                     cursor: pointer;
-                    height: 40px;
                     display: flex;
                     align-items: center;
-                    gap: 8px;
-                    padding: 0 8px;
-                    /* Reduced padding to move icon closer to text */
-                    border-radius: 8px;
-                    /* Simpler border radius */
+                    gap: 10px;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    background: rgba(255, 255, 255, 0.15);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: white;
+                    font-size: 0.9rem;
+                    font-weight: 600;
                     transition: all 0.2s ease;
                     margin-right: 15px;
+                    backdrop-filter: blur(4px);
                 }
 
                 .jd-request-icon:hover {
-                    background: rgba(255, 255, 255, 0.1);
-                    /* Subtle highlight only */
+                    background: rgba(255, 255, 255, 0.25);
+                    border-color: rgba(255, 255, 255, 0.5);
                     transform: translateY(-1px);
                 }
 
                 .jd-request-icon i {
-                    font-size: 1.2rem;
-                    /* Slightly larger icon */
-                    color: white;
+                    font-size: 0.95rem;
                 }
 
                 .jd-request-text-label {
                     color: white;
                     font-weight: 600;
-                    font-size: 0.95rem;
+                    font-size: 0.9rem;
                 }
 
                 .jd-request-badge {
                     position: absolute;
-                    top: -6px;
-                    right: -6px;
+                    top: -8px;
+                    right: -8px;
                     background-color: #ef4444;
                     color: white;
                     font-size: 0.65rem;
                     font-weight: 800;
-                    min-width: 16px;
-                    height: 16px;
+                    min-width: 18px;
+                    height: 18px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     border-radius: 50%;
-                    border: 1.5px solid #4A62DD;
+                    border: 2px solid #4A62DD;
                     /* Matches header bg exactly */
-                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     z-index: 10;
                 }
 
@@ -2624,40 +2625,6 @@
                     opacity: 1;
                 }
 
-                /* JD Request Styles */
-                .jd-request-icon {
-                    position: relative;
-                    cursor: pointer;
-                    width: 40px;
-                    height: 40px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 50%;
-                    transition: background-color 0.2s;
-                }
-
-                .jd-request-icon i {
-                    font-size: 1.5rem;
-                    color: white;
-                }
-
-                .jd-request-icon:hover {
-                    background-color: rgba(255, 255, 255, 0.1);
-                }
-
-                .jd-request-badge {
-                    position: absolute;
-                    top: 5px;
-                    right: 5px;
-                    background-color: #ef4444;
-                    color: white;
-                    font-size: 0.65rem;
-                    font-weight: 700;
-                    padding: 2px 5px;
-                    border-radius: 10px;
-                    border: 2px solid #4A62DD;
-                }
 
                 .jd-request-dropdown {
                     position: absolute;
@@ -3248,26 +3215,73 @@
                 <!-- 5 & 6) CHARTS & ALERTS -->
                 <!-- 7) TABULAR RESULT -->
                 <section class="results-panel">
-                    <div class="panel-title">
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span id="dynamic-jd-title" style="font-size: 1.1rem; color: #1e293b;">Analyzed Results -
-                                ERP Next
-                                Consultant</span>
+                    <div class="panel-title"
+                        style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="dynamic-jd-title"
+                                style="color: var(--primary); font-size: 1.1rem; font-weight: 700;">All Analyzed
+                                Results - ERP Next Consultant</span>
                         </div>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn-export" onclick="exportTableToCSV()">
-                                <i class="fas fa-file-export"></i> Export Results
+                        <div id="analysed-results-actions" style="display: flex; gap: 12px; align-items: center;">
+                            <button id="clear-filters-btn" class="btn-clear" onclick="clearAllFilters()"
+                                style="display: none;">
+                                <i class="fas fa-filter-circle-xmark"></i> Clear Filters
+                            </button>
+                            <button class="btn-update" id="btn-export-results-header"
+                                style="height: auto; padding: 8px 16px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-download"></i> Export Results
                             </button>
                         </div>
                     </div>
 
                     <style>
+                        /* Clear Filter Button - Premium Styling */
+                        .btn-clear {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            padding: 8px 16px;
+                            border-radius: 8px;
+                            border: 1px solid rgba(74, 98, 221, 0.2);
+                            background: linear-gradient(to bottom, #ffffff, #f8fafc);
+                            color: #64748b;
+                            font-weight: 600;
+                            cursor: pointer;
+                            font-size: 0.85rem;
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+                            white-space: nowrap;
+                        }
+
+                        .btn-clear:hover {
+                            background: #fff;
+                            color: var(--primary);
+                            border-color: var(--primary);
+                            box-shadow: 0 4px 12px rgba(74, 98, 221, 0.15);
+                            transform: translateY(-1px);
+                        }
+
+                        .btn-clear:active {
+                            transform: translateY(0);
+                            box-shadow: 0 2px 4px rgba(74, 98, 221, 0.1);
+                        }
+
+                        .btn-clear i {
+                            font-size: 0.9rem;
+                            transition: transform 0.3s ease;
+                        }
+
+                        .btn-clear:hover i {
+                            transform: rotate(-15deg) scale(1.1);
+                        }
+
                         /* Filter Popup Styles */
                         .th-content {
                             position: relative;
                             display: flex;
                             align-items: center;
-                            justify-content: space-between;
+                            justify-content: flex-start;
+                            gap: 8px;
                             cursor: default;
                         }
 
@@ -3283,17 +3297,50 @@
                             padding: 4px;
                             border-radius: 4px;
                             transition: all 0.2s;
-                            margin-left: 8px;
-                            font-size: 0.8rem;
+                            margin-left: 4px;
+                            font-size: 0.75rem;
+                            opacity: 0.8;
                         }
 
                         .filter-icon:hover {
                             color: var(--primary);
                             background: #eff6ff;
+                            opacity: 1;
                         }
 
                         .filter-icon.active {
                             color: var(--primary);
+                            opacity: 1;
+                        }
+
+                        .sort-arrows {
+                            display: flex;
+                            flex-direction: column;
+                            line-height: 0.6;
+                            cursor: pointer;
+                            margin-left: 6px;
+                            opacity: 0.7;
+                            transition: opacity 0.2s;
+                        }
+
+                        .sort-arrows:hover {
+                            opacity: 1;
+                        }
+
+                        .sort-arrow {
+                            font-size: 0.65rem;
+                            color: #cbd5e1;
+                            transition: all 0.1s;
+                        }
+
+                        .sort-arrow:hover {
+                            color: var(--primary);
+                            transform: scale(1.2);
+                        }
+
+                        .sort-arrow.active {
+                            color: var(--primary);
+                            font-weight: bold;
                         }
 
                         .filter-popup {
@@ -3620,12 +3667,30 @@
                         <table id="analysed-results-table">
                             <thead>
                                 <tr>
-                                    <th class="sticky-col col-sn" style="width: 60px;">S.no</th>
+                                    <th class="sticky-col col-sn" style="width: 60px;">
+                                        <div class="th-content">
+                                            S.No
+                                            <div class="sort-arrows">
+                                                <i class="fas fa-caret-up sort-arrow"
+                                                    onclick="sortTable(0, 'candidate-results-body', 'asc')"></i>
+                                                <i class="fas fa-caret-down sort-arrow"
+                                                    onclick="sortTable(0, 'candidate-results-body', 'desc')"></i>
+                                            </div>
+                                        </div>
+                                    </th>
                                     <!-- JD version (Sticky) -->
                                     <th class="sticky-col col-jd">
                                         <div class="th-content">
-                                            JD version
-                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            JD Version
+                                            <div class="th-icons">
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(1, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(1, 'candidate-results-body', 'desc')"></i>
+                                                </div>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
                                             <div class="filter-popup">
                                                 <select class="table-filter" data-col="1"
                                                     onchange="applyTableFilters()">
@@ -3643,10 +3708,14 @@
                                     <!-- Candidate name (Sticky) -->
                                     <th class="sticky-col col-name">
                                         <div class="th-content">
-                                            Candidate name
+                                            Candidate Name
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(2, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(2, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(2, 'candidate-results-body', 'desc')"></i>
+                                                </div>
                                                 <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
                                             </div>
                                             <div class="filter-popup">
@@ -3660,8 +3729,12 @@
                                         <div class="th-content">
                                             City
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(3, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(3, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(3, 'candidate-results-body', 'desc')"></i>
+                                                </div>
                                                 <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
                                             </div>
                                             <div class="filter-popup">
@@ -3673,60 +3746,109 @@
                                     <!-- Qualification score -->
                                     <th>
                                         <div class="th-content">
-                                            Qualification score
+                                            Qualification Score
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(4, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(4, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(4, 'candidate-results-body', 'desc')"></i>
+                                                </div>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="4"
+                                                    onkeyup="applyTableFilters()" placeholder="Ex: 8.5">
                                             </div>
                                         </div>
                                     </th>
                                     <!-- Relevant exp score -->
                                     <th>
                                         <div class="th-content">
-                                            Relevant exp score
+                                            Relevant Exp Score
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(5, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(5, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(5, 'candidate-results-body', 'desc')"></i>
+                                                </div>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="5"
+                                                    onkeyup="applyTableFilters()" placeholder="Ex: 9.0">
                                             </div>
                                         </div>
                                     </th>
                                     <!-- total exp score -->
                                     <th>
                                         <div class="th-content">
-                                            total exp score
+                                            Total Exp Score
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(6, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(6, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(6, 'candidate-results-body', 'desc')"></i>
+                                                </div>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="6"
+                                                    onkeyup="applyTableFilters()" placeholder="Ex: 7.0">
                                             </div>
                                         </div>
                                     </th>
                                     <!-- certification score -->
                                     <th>
                                         <div class="th-content">
-                                            certification score
+                                            Certification Score
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(7, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(7, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(7, 'candidate-results-body', 'desc')"></i>
+                                                </div>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="7"
+                                                    onkeyup="applyTableFilters()" placeholder="Ex: 8.0">
                                             </div>
                                         </div>
                                     </th>
                                     <!-- key responsibilities score -->
                                     <th>
                                         <div class="th-content">
-                                            key responsibilities score
+                                            Key Responsibilities Score
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(8, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(8, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(8, 'candidate-results-body', 'desc')"></i>
+                                                </div>
+                                                <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            </div>
+                                            <div class="filter-popup">
+                                                <input type="text" class="table-filter" data-col="8"
+                                                    onkeyup="applyTableFilters()" placeholder="Ex: 8.8">
                                             </div>
                                         </div>
                                     </th>
                                     <!-- Skill set score -->
                                     <th>
                                         <div class="th-content">
-                                            Skill set score
+                                            Skill Set Score
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(9, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(9, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(9, 'candidate-results-body', 'desc')"></i>
+                                                </div>
                                                 <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
                                             </div>
                                             <div class="filter-popup">
@@ -3738,10 +3860,14 @@
                                     <!-- Overall suitability score -->
                                     <th>
                                         <div class="th-content">
-                                            Overall suitability score
+                                            Overall Suitability Score
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(10, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(10, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(10, 'candidate-results-body', 'desc')"></i>
+                                                </div>
                                                 <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
                                             </div>
                                             <div class="filter-popup">
@@ -3753,10 +3879,14 @@
                                     <!-- AI status (Sticky) -->
                                     <th class="sticky-col col-ai">
                                         <div class="th-content">
-                                            AI status
+                                            AI Status
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(11, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(11, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(11, 'candidate-results-body', 'desc')"></i>
+                                                </div>
                                                 <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
                                             </div>
                                             <div class="filter-popup">
@@ -3774,10 +3904,14 @@
                                     <!-- HR status (Sticky) -->
                                     <th class="sticky-col col-hr">
                                         <div class="th-content">
-                                            HR status
+                                            HR Status
                                             <div class="th-icons">
-                                                <i class="fas fa-sort sort-icon"
-                                                    onclick="sortTable(12, 'candidate-results-body')"></i>
+                                                <div class="sort-arrows">
+                                                    <i class="fas fa-caret-up sort-arrow"
+                                                        onclick="sortTable(12, 'candidate-results-body', 'asc')"></i>
+                                                    <i class="fas fa-caret-down sort-arrow"
+                                                        onclick="sortTable(12, 'candidate-results-body', 'desc')"></i>
+                                                </div>
                                                 <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
                                             </div>
                                             <div class="filter-popup">
@@ -4735,7 +4869,7 @@
                                 </th>
                                 <th>
                                     <div class="th-content">
-                                        Relevant exp score
+                                        Relevant Exp Score
                                         <div class="th-icons">
                                             <i class="fas fa-sort sort-icon" onclick="sortTable(4)"></i>
                                         </div>
@@ -4743,7 +4877,7 @@
                                 </th>
                                 <th>
                                     <div class="th-content">
-                                        total exp score
+                                        Total Exp Score
                                         <div class="th-icons">
                                             <i class="fas fa-sort sort-icon" onclick="sortTable(5)"></i>
                                         </div>
@@ -4751,7 +4885,7 @@
                                 </th>
                                 <th>
                                     <div class="th-content">
-                                        certification score
+                                        Certification Score
                                         <div class="th-icons">
                                             <i class="fas fa-sort sort-icon" onclick="sortTable(6)"></i>
                                         </div>
@@ -4759,7 +4893,7 @@
                                 </th>
                                 <th>
                                     <div class="th-content">
-                                        key responsibilities score
+                                        Key Responsibilities Score
                                         <div class="th-icons">
                                             <i class="fas fa-sort sort-icon" onclick="sortTable(7)"></i>
                                         </div>
@@ -4767,7 +4901,7 @@
                                 </th>
                                 <th>
                                     <div class="th-content">
-                                        Skill set score
+                                        Skill Set Score
                                         <div class="th-icons">
                                             <i class="fas fa-sort sort-icon" onclick="sortTable(8)"></i>
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
@@ -4780,7 +4914,7 @@
                                 </th>
                                 <th class="score-col">
                                     <div class="th-content">
-                                        Overall suitability score
+                                        Overall Suitability Score
                                         <div class="th-icons">
                                             <i class="fas fa-sort sort-icon" onclick="sortTable(9)"></i>
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
@@ -4793,7 +4927,7 @@
                                 </th>
                                 <th class="modal-sticky-col modal-col-ai">
                                     <div class="th-content">
-                                        AI status
+                                        AI Status
                                         <div class="th-icons">
                                             <i class="fas fa-sort sort-icon" onclick="sortTable(10)"></i>
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
@@ -5184,7 +5318,10 @@
             if (jdSelect) {
                 jdSelect.addEventListener('change', (e) => {
                     const newValue = e.target.value;
-                    if (dynamicTitle) dynamicTitle.textContent = newValue;
+                    // Keep the main header clean as "Analyzed Results" as per premium design
+                    if (dynamicTitle && dynamicTitle.textContent !== "Analyzed Results") {
+                        dynamicTitle.textContent = "Analyzed Results";
+                    }
                     if (dynamicTitleVersions) dynamicTitleVersions.textContent = newValue;
                     updateHeader();
                 });
@@ -6082,134 +6219,24 @@
                 });
             }
 
-            // --- TABLE ACTIONS (Filter, Sort, Export) ---
-
-            // Toggle Filter Popup
-            window.toggleFilter = function (icon) {
-                const popup = icon.nextElementSibling;
-                const allPopups = document.querySelectorAll('.filter-popup');
-
-                // Close others
-                allPopups.forEach(p => {
-                    if (p !== popup) p.style.display = 'none';
-                });
-
-                // Toggle current
-                if (popup.style.display === 'block') {
-                    popup.style.display = 'none';
-                } else {
-                    popup.style.display = 'block';
-                    const input = popup.querySelector('input, select');
-                    if (input) input.focus();
-                }
-
-                // Stop propagation to prevent immediate closing
-                if (window.event) window.event.stopPropagation();
-            };
-
-            // Close popups when clicking outside
-            document.addEventListener('click', function (e) {
-                if (!e.target.closest('.th-content')) {
-                    document.querySelectorAll('.filter-popup').forEach(p => {
-                        p.style.display = 'none';
-                    });
-                }
-            });
-
-            // Filter Table Logic
-            window.filterTable = function () {
-                const tableBody = document.getElementById('analysis-results-body');
-                const rows = Array.from(tableBody.getElementsByTagName('tr'));
-
-                // Get all filter inputs
-                const nameInput = document.querySelector('input[placeholder="Search Name"]');
-                const skillInput = document.querySelector('input[placeholder="Filter Skill"]');
-                const statusSelect = document.querySelector('select.table-filter');
-
-                const nameValue = nameInput ? nameInput.value.toLowerCase() : '';
-                const skillValue = skillInput ? skillInput.value.toLowerCase() : '';
-                const statusValue = statusSelect ? statusSelect.value.toLowerCase() : '';
-
-                rows.forEach(row => {
-                    // Check if row is empty state
-                    if (row.cells.length < 2) return;
-
-                    const nameText = row.cells[1].textContent.toLowerCase();
-                    const skillText = row.cells[3].textContent.toLowerCase();
-                    const statusText = row.cells[5].textContent.toLowerCase();
-
-                    const matchesName = !nameValue || nameText.includes(nameValue);
-                    const matchesSkill = !skillValue || skillText.includes(skillValue);
-                    const matchesStatus = !statusValue || statusValue === 'all' || statusText.includes(statusValue);
-
-                    if (matchesName && matchesSkill && matchesStatus) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-
-                checkFilterState();
-            };
-
-            // Check Filter State to toggle "Clear Filters" button
-            function checkFilterState() {
-                const clearBtn = document.getElementById('clear-filters-btn');
-                const nameInput = document.querySelector('input[placeholder="Search Name"]');
-                const skillInput = document.querySelector('input[placeholder="Filter Skill"]');
-                const statusSelect = document.querySelector('select.table-filter');
-
-                const hasFilter = (nameInput && nameInput.value) ||
-                    (skillInput && skillInput.value) ||
-                    (statusSelect && statusSelect.value);
-
-                if (hasFilter) {
-                    clearBtn.style.display = 'flex';
-                } else {
-                    clearBtn.style.display = 'none';
-                }
-            }
-
-            // Clear Filters
-            window.clearFilters = function () {
-                const nameInput = document.querySelector('input[placeholder="Search Name"]');
-                const skillInput = document.querySelector('input[placeholder="Filter Skill"]');
-                const statusSelect = document.querySelector('select.table-filter');
-
-                if (nameInput) nameInput.value = '';
-                if (skillInput) skillInput.value = '';
-                if (statusSelect) statusSelect.value = '';
-
-                // Reload Data (resets sort and filters)
-                populateAnalysisResults();
-
-                // Hide button
-                document.getElementById('clear-filters-btn').style.display = 'none';
-
-                // Close any open popups
-                document.querySelectorAll('.filter-popup').forEach(p => p.style.display = 'none');
-            };
-
             // Sort Table
-            window.sortTable = function (colIndex, tbodyId) {
-                const tableBody = document.getElementById(tbodyId || 'analysis-results-body');
+            window.sortTable = function (colIndex, tbodyId, direction = 'asc') {
+                const tableBody = document.getElementById(tbodyId || 'candidate-results-body');
                 if (!tableBody) return;
-                const rows = Array.from(tableBody.getElementsByTagName('tr')).filter(r => !r.classList.contains('empty-message'));
+                const rows = Array.from(tableBody.getElementsByTagName('tr')).filter(r => !r.classList.contains('empty-message') && !r.classList.contains('empty-state'));
 
-                // Toggle order logic
-                const icon = event ? event.currentTarget : null;
-                let nextOrder = 'desc';
-                if (icon) {
-                    const currentOrder = icon.getAttribute('data-order') || 'asc';
-                    nextOrder = currentOrder === 'desc' ? 'asc' : 'desc';
-                    icon.setAttribute('data-order', nextOrder);
+                // Update active state of arrows
+                const table = tableBody.closest('table');
+                if (table) {
+                    const allArrows = table.querySelectorAll('.sort-arrow');
+                    allArrows.forEach(arrow => arrow.classList.remove('active'));
 
-                    // Reset other icons in the same row
-                    const header = icon.closest('tr');
-                    if (header) {
-                        header.querySelectorAll('.sort-icon').forEach(i => {
-                            if (i !== icon) i.removeAttribute('data-order');
-                        });
+                    const ths = table.querySelectorAll('thead th');
+                    const targetTh = ths[colIndex];
+                    if (targetTh) {
+                        const arrowClass = direction === 'asc' ? '.fa-caret-up' : '.fa-caret-down';
+                        const targetArrow = targetTh.querySelector(arrowClass);
+                        if (targetArrow) targetArrow.classList.add('active');
                     }
                 }
 
@@ -6220,29 +6247,116 @@
                     let valB = b.cells[colIndex].textContent.trim();
 
                     // Handle numeric sorting
-                    const numA = parseFloat(valA.replace(/[^0-9.]/g, ''));
-                    const numB = parseFloat(valB.replace(/[^0-9.]/g, ''));
+                    const cleanA = valA.replace(/[^0-9.-]/g, '');
+                    const cleanB = valB.replace(/[^0-9.-]/g, '');
 
-                    if (!isNaN(numA) && !isNaN(numB)) {
-                        return nextOrder === 'desc' ? numB - numA : numA - numB;
+                    const numA = parseFloat(cleanA);
+                    const numB = parseFloat(cleanB);
+
+                    if (!isNaN(numA) && !isNaN(numB) && cleanA !== '' && cleanB !== '') {
+                        return direction === 'desc' ? numB - numA : numA - numB;
                     } else {
-                        return nextOrder === 'desc'
+                        return direction === 'desc'
                             ? valB.toLowerCase().localeCompare(valA.toLowerCase())
                             : valA.toLowerCase().localeCompare(valB.toLowerCase());
                     }
                 });
 
                 // Clear and re-append
+                const emptyRow = tableBody.querySelector('.empty-message, .empty-state');
                 tableBody.innerHTML = '';
+                if (emptyRow) tableBody.appendChild(emptyRow);
                 rows.forEach(row => tableBody.appendChild(row));
 
-                // Show Clear Filter button if it exists
+                // Show Clear Filter button
                 const clearBtn = document.getElementById('clear-filters-btn');
                 if (clearBtn) clearBtn.style.display = 'flex';
             };
 
+            // Filter Table Logic
+            window.applyTableFilters = function () {
+                let anyFilterActive = false;
+                const tableId = 'analysed-results-table';
+                const targetTable = document.getElementById(tableId);
+                if (!targetTable) return;
+
+                const tableBody = targetTable.querySelector('tbody');
+                if (!tableBody) return;
+
+                const trs = tableBody.getElementsByTagName('tr');
+                const filters = targetTable.querySelectorAll('.table-filter');
+
+                const activeFilters = [];
+                filters.forEach(f => {
+                    const val = f.value.toLowerCase().trim();
+                    if (val && val !== 'all' && val !== '') {
+                        activeFilters.push({
+                            colIndex: parseInt(f.dataset.col),
+                            value: val
+                        });
+                        anyFilterActive = true;
+                    }
+                });
+
+                let visibleCount = 0;
+                for (let i = 0; i < trs.length; i++) {
+                    const tr = trs[i];
+                    if (tr.classList.contains('empty-message') || tr.classList.contains('empty-state')) continue;
+
+                    let isMatch = true;
+                    const tds = tr.getElementsByTagName('td');
+
+                    for (let f = 0; f < activeFilters.length; f++) {
+                        const filter = activeFilters[f];
+                        const td = tds[filter.colIndex];
+
+                        if (td) {
+                            const cellText = td.textContent.toLowerCase().trim();
+                            if (!cellText.includes(filter.value)) {
+                                isMatch = false;
+                                break;
+                            }
+                        }
+                    }
+                    tr.style.display = isMatch ? '' : 'none';
+                    if (isMatch) visibleCount++;
+                }
+
+                const emptyState = document.getElementById('candidate-empty-state');
+                if (emptyState) {
+                    emptyState.style.display = visibleCount === 0 ? '' : 'none';
+                }
+
+                // Update "Clear Filters" button visibility
+                const clearBtn = document.getElementById('clear-filters-btn');
+                if (clearBtn) {
+                    clearBtn.style.display = anyFilterActive ? 'flex' : 'none';
+                }
+            };
+
+            window.clearAllFilters = function () {
+                const filters = document.querySelectorAll('.table-filter');
+                filters.forEach(f => {
+                    f.value = '';
+                });
+
+                // Reset arrows
+                document.querySelectorAll('.sort-arrow').forEach(a => a.classList.remove('active'));
+
+                applyTableFilters();
+
+                // Refresh table to original state if needed or just apply empty filters
+                const tableBody = document.getElementById('candidate-results-body');
+                const rows = Array.from(tableBody.getElementsByTagName('tr'));
+                rows.forEach(r => r.style.display = '');
+
+                const clearBtn = document.getElementById('clear-filters-btn');
+                if (clearBtn) clearBtn.style.display = 'none';
+            };
+
+
             // Export logic (Simulated)
-            function exportAnalysedResults() {
+            function exportAnalysedResultsSimulated() {
                 const confirmed = confirm("Are you sure you want to export the analysed results? This will download a CSV file with all candidate scores.");
 
                 if (confirmed) {
@@ -6566,7 +6680,42 @@
             // Initial Filter Run to setup overlays
             filterAnalysisCards('all');
 
-            // --- TABLE SORT/FILTER LOGIC ---
+            // --- TABLE ACTIONS (Filter, Sort, Export) ---
+
+            // Toggle Filter Popup
+            window.toggleFilter = function (icon) {
+                const popup = icon.closest('.th-icons').nextElementSibling;
+                const allPopups = document.querySelectorAll('.filter-popup');
+
+                // Close others
+                allPopups.forEach(p => {
+                    if (p !== popup) p.style.display = 'none';
+                });
+
+                // Toggle current
+                if (popup) {
+                    if (popup.style.display === 'block') {
+                        popup.style.display = 'none';
+                    } else {
+                        popup.style.display = 'block';
+                        const input = popup.querySelector('input, select');
+                        if (input) input.focus();
+                    }
+                }
+
+                // Stop propagation to prevent immediate closing
+                if (event) event.stopPropagation();
+            };
+
+            // Close popups when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.th-content')) {
+                    document.querySelectorAll('.filter-popup').forEach(p => {
+                        p.style.display = 'none';
+                    });
+                }
+            });
+
             const tableBody = document.querySelector('#analysed-results-table tbody'); // Target specific table to avoid SN error
 
             if (tableBody) {
@@ -7978,10 +8127,6 @@
             const jdSelect = document.querySelector('.jd-select');
             if (jdSelect) {
                 jdSelect.addEventListener('change', () => {
-                    const titleSpan = document.getElementById('dynamic-jd-title');
-                    const versionsSpan = document.getElementById('dynamic-jd-title-versions');
-                    if (titleSpan) titleSpan.textContent = jdSelect.value;
-                    if (versionsSpan) versionsSpan.textContent = jdSelect.value;
                     updateDashboardActionButtons();
                 });
             }
@@ -8315,17 +8460,78 @@
             });
         });
 
-        function exportJdHistory() {
-            alert("Exporting JD History to CSV...");
+        async function saveFile(content, fileName, mimeType) {
+            try {
+                if ('showSaveFilePicker' in window) {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: fileName,
+                        types: [{
+                            description: 'CSV File',
+                            accept: { [mimeType]: ['.csv'] },
+                        }],
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(content);
+                    await writable.close();
+                    alert(`SUCCESS: File saved successfully!`);
+                } else {
+                    // Fallback
+                    const blob = new Blob([content], { type: mimeType });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", fileName);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    alert(`Download started! Please check your downloads folder.`);
+                }
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.error('Save failed:', err);
+                    alert('Error: Failed to save file.');
+                }
+            }
         }
 
-        function exportAnalysedResults() {
-            const table = document.getElementById('analysed-results-table');
+        async function exportJdHistory() {
+            const tbody = document.getElementById('jd-history-body');
+            if (!tbody) return;
+
+            const headerRow = tbody.closest('table').querySelector('thead tr');
+            const bodyRows = Array.from(tbody.querySelectorAll('tr'));
+
+            if (bodyRows.length === 0) {
+                alert("No history found to export.");
+                return;
+            }
+
+            const headers = Array.from(headerRow.querySelectorAll('th')).map(th => `"${th.innerText.trim().replace(/"/g, '""')}"`);
+            const csvRows = bodyRows.map(tr => {
+                return Array.from(tr.querySelectorAll('td')).map((td, i) => {
+                    let text;
+                    if (i === 5) { // Active column with toggle
+                        const input = td.querySelector('input');
+                        text = input ? (input.checked ? 'Yes' : 'No') : 'N/A';
+                    } else {
+                        text = td.innerText.trim().replace(/\r?\n/g, ' ');
+                    }
+                    return `"${text.replace(/"/g, '""')}"`;
+                }).join(',');
+            });
+
+            const csvContent = "\uFEFF" + headers.join(',') + '\n' + csvRows.join('\n');
+            const fileName = `JD_History_${new Date().toISOString().split('T')[0]}.csv`;
+            await saveFile(csvContent, fileName, 'text/csv');
+        }
+
+        async function exportAnalysedResults(tableId = 'analysed-results-table') {
+            const table = document.getElementById(tableId);
             if (!table) return;
 
             const headerRow = table.querySelector('thead tr');
             const bodyRows = Array.from(table.querySelectorAll('tbody tr')).filter(tr => {
-                // Ignore the empty state row and hidden rows
                 return !tr.classList.contains('empty-state') && tr.style.display !== 'none' && tr.offsetParent !== null;
             });
 
@@ -8334,16 +8540,12 @@
                 return;
             }
 
-            // Extract column headers
             const headers = Array.from(headerRow.querySelectorAll('th')).map(th => {
-                // Get the text content, specifically avoiding filter/sort icons
-                // The structure is <th><div class="th-content">TITLE...</div></th>
                 const thContent = th.querySelector('.th-content');
                 let text = thContent ? thContent.childNodes[0].textContent.trim() : th.innerText.trim();
                 return `"${text.replace(/"/g, '""')}"`;
             });
 
-            // Extract row data
             const csvRows = bodyRows.map(tr => {
                 return Array.from(tr.querySelectorAll('td')).map(td => {
                     let text = td.innerText.trim().replace(/\r?\n/g, ' ');
@@ -8351,23 +8553,15 @@
                 }).join(',');
             });
 
-            // Combine into CSV
             const csvContent = "\uFEFF" + headers.join(',') + '\n' + csvRows.join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
             const fileName = `Analysed_Results_${new Date().toISOString().split('T')[0]}.csv`;
-            link.setAttribute("download", fileName);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            await saveFile(csvContent, fileName, 'text/csv');
         }
 
         // --- FILTERING LOGIC ---
         function applyTableFilters() {
+            let anyFilterActive = false;
+
             const processTable = (tableId) => {
                 const targetTable = document.getElementById(tableId);
                 if (!targetTable || targetTable.offsetParent === null) return;
@@ -8376,16 +8570,17 @@
                 if (!tableBody) return;
 
                 const trs = tableBody.getElementsByTagName('tr');
-                const filters = targetTable.querySelectorAll('.table-filter');
+                const filters = targetTable.querySelectorAll('.table-filter, .dup-table-filter');
 
                 const activeFilters = [];
                 filters.forEach(f => {
                     const val = f.value.toLowerCase().trim();
-                    if (val && val !== 'all' && val !== '') {
+                    if (val && val !== 'all' && val !== '' && val !== 'none') {
                         activeFilters.push({
-                            colIndex: parseInt(f.dataset.col),
+                            colIndex: f.dataset.col && f.dataset.col.includes('dup') ? f.dataset.col : parseInt(f.dataset.col),
                             value: val
                         });
+                        anyFilterActive = true;
                     }
                 });
 
@@ -8396,9 +8591,19 @@
 
                     let isMatch = true;
                     const tds = tr.getElementsByTagName('td');
+
                     for (let f = 0; f < activeFilters.length; f++) {
                         const filter = activeFilters[f];
-                        const td = tds[filter.colIndex];
+                        let td;
+
+                        if (typeof filter.colIndex === 'number') {
+                            td = tds[filter.colIndex];
+                        } else {
+                            if (filter.colIndex === 'dup-version') td = tr.querySelector('.col-jd-v') || tds[1];
+                            if (filter.colIndex === 'dup-name') td = tr.querySelector('.col-name') || tds[2];
+                            if (filter.colIndex === 'dup-contact') td = tr.querySelector('.col-contact') || tds[3];
+                        }
+
                         if (td) {
                             const cellText = td.textContent.toLowerCase().trim();
                             if (!cellText.includes(filter.value)) {
@@ -8411,22 +8616,21 @@
                     if (isMatch) visibleCount++;
                 }
 
-                // Toggle empty state if needed
                 const emptyState = targetTable.querySelector('.empty-state, .empty-message');
                 if (emptyState) {
                     emptyState.style.display = visibleCount === 0 ? '' : 'none';
-                }
-
-                // Update "Clear Filters" button visibility
-                const clearBtn = document.getElementById('clear-filters-btn') || document.querySelector('#jd-history-actions #clear-filters-btn');
-                if (clearBtn) {
-                    clearBtn.style.display = activeFilters.length > 0 ? 'flex' : 'none';
                 }
             }
 
             processTable('analysed-results-table');
             processTable('analysis-results-table-modal');
             processTable('duplicates-table');
+
+            // Update "Clear Filters" button visibility globally
+            const clearBtn = document.getElementById('clear-filters-btn') || document.querySelector('#jd-history-actions #clear-filters-btn');
+            if (clearBtn) {
+                clearBtn.style.display = anyFilterActive ? 'flex' : 'none';
+            }
         }
 
         function clearAllFilters() {
@@ -8567,8 +8771,17 @@
         }
 
         function closeScoringCriteria() {
-            document.getElementById('scoring-criteria-modal').classList.remove('active');
-            isCreationFlow = false; // Reset flow state
+            const scoringJdTitle = document.getElementById('scoring-jd-title');
+            const currentJd = scoringJdTitle ? scoringJdTitle.textContent : 'ERP Next Consultant';
+
+            if (confirm(`Are you sure you want to close? If you click "OK", the default scores will be applied. Click "Cancel" to return and set scores manually.`)) {
+                // Apply defaults
+                loadCriteriaForJd(currentJd, true);
+                calculateTotalWeight();
+
+                document.getElementById('scoring-criteria-modal').classList.remove('active');
+                isCreationFlow = false; // Reset flow state
+            }
         }
 
         function calculateTotalWeight() {
