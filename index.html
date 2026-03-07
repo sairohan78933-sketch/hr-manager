@@ -290,7 +290,7 @@
         }
 
         .kpi-card {
-            background-color: var(--card-bg);
+            background-color: white;
             border-radius: 12px;
             padding: 16px;
             box-shadow: 0 4px 6px rgba(74, 98, 221, 0.1);
@@ -745,7 +745,7 @@
 
         .modal-container {
             background-color: white;
-            width: 700px;
+            width: 730px;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             overflow: hidden;
@@ -760,6 +760,42 @@
             transform: translateY(0);
         }
 
+        /* Minimized State */
+        .modal-overlay.minimized {
+            pointer-events: none;
+            /* Let clicks pass through to dashboard */
+            background-color: transparent !important;
+            /* Hide back shadow */
+        }
+
+        .modal-overlay.minimized .modal-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            transform: none;
+            /* Override standard active transform */
+            pointer-events: auto;
+            /* Catch clicks on the minimized bar */
+            max-height: auto;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-overlay.minimized .modal-body,
+        .modal-overlay.minimized .modal-footer {
+            display: none !important;
+        }
+
+        .modal-overlay.minimized .modal-header {
+            border-radius: 12px;
+            border-bottom: none;
+            padding: 12px 20px;
+        }
+
+        .modal-overlay.minimized .modal-title {
+            font-size: 1.1rem;
+        }
+
         .modal-header {
             padding: 24px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -771,25 +807,35 @@
             color: var(--text-light);
         }
 
-        .close-modal {
-            font-size: 1.2rem;
-            font-weight: 700;
+        .modal-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .modal-header-btn {
+            font-size: 1rem;
             color: #fff;
             cursor: pointer;
-            line-height: 1;
-            background-color: var(--danger);
-            width: 32px;
-            height: 32px;
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
-            transition: all 0.2s;
+            border-radius: 4px;
+            background-color: transparent;
+            border: none;
+            transition: background-color 0.2s, color 0.2s;
+            outline: none;
         }
 
-        .close-modal:hover {
-            opacity: 0.9;
-            transform: scale(1.05);
+        .modal-header-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .modal-header-btn.btn-close:hover {
+            background-color: #e81123 !important;
+            color: #fff !important;
         }
 
         .modal-title {
@@ -813,6 +859,8 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            width: 100%;
+            box-sizing: border-box;
             border-left: 6px solid var(--primary);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             margin-bottom: 24px;
@@ -886,6 +934,8 @@
             padding: 40px;
             text-align: center;
             transition: all 0.2s;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .upload-area:hover {
@@ -1670,20 +1720,25 @@
         }
 
         .app-logo {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #FC4860 0%, #4A62DD 100%);
-            border-radius: 8px;
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #4A62DD 0%, #5FE3FB 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 800;
-            font-size: 1.1rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            border: 2px solid white;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 12px rgba(74, 98, 221, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .app-logo:hover {
+            transform: rotate(5deg) scale(1.1);
+            box-shadow: 0 6px 16px rgba(95, 227, 251, 0.4);
         }
 
         .app-logo::before {
@@ -1776,9 +1831,9 @@
 
         /* PDF VIEWER MODAL STYLES */
         #pdf-viewer-modal .modal-container {
-            width: 90%;
+            width: 730px;
             height: 90vh;
-            max-width: 1200px;
+            max-width: 730px;
             max-height: 95vh;
         }
 
@@ -1823,7 +1878,7 @@
 
         .dup-modal-container {
             background-color: white;
-            width: 600px;
+            width: 730px;
             max-width: 90%;
             border-radius: 16px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
@@ -2010,7 +2065,7 @@
 
         .jd-modal-container {
             background-color: white;
-            width: 500px;
+            width: 700px;
             max-width: 90%;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -2025,26 +2080,6 @@
             transform: scale(1);
         }
 
-        /* JD Close Button Styling */
-        #jd-close-btn {
-            background-color: var(--danger);
-            border: none;
-            font-size: 1.1rem;
-            color: #fff;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        #jd-close-btn:hover {
-            opacity: 0.9;
-            transform: scale(1.05);
-        }
 
         .jd-dropzone {
             border: 2px dashed #cbd5e1;
@@ -2158,8 +2193,11 @@
     <header class="global-header">
         <div class="header-left">
             <div class="logo-container">
-                <div class="app-logo">S</div>
-                <div class="logo">SmartHire</div>
+                <div class="app-logo">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo"><span style="font-weight: 400; color: rgba(255,255,255,0.85);">Smart</span><span
+                        style="font-weight: 700;">Hire</span></div>
             </div>
 
             <div id="main-header-context"
@@ -4130,20 +4168,6 @@
                                     <th style="width: 60px;">SN</th>
                                     <th>
                                         <div class="th-content">
-                                            JD Version
-                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
-                                            <div class="filter-popup">
-                                                <select class="dup-table-filter" data-col="dup-version">
-                                                    <option value="all">All</option>
-                                                    <option value="v1.0">v1.0</option>
-                                                    <option value="v1.1">v1.1</option>
-                                                    <option value="v2.0">v2.0</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </th>
-                                    <th>
-                                        <div class="th-content">
                                             Duplicate Resumes
                                             <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
                                             <div class="filter-popup">
@@ -4192,48 +4216,62 @@
                                             </div>
                                         </div>
                                     </th>
+                                    <th>
+                                        <div class="th-content">
+                                            JD Version
+                                            <i class="fas fa-filter filter-icon" onclick="toggleFilter(this)"></i>
+                                            <div class="filter-popup">
+                                                <select class="dup-table-filter" data-col="dup-version">
+                                                    <option value="all">All</option>
+                                                    <option value="v1.0">v1.0</option>
+                                                    <option value="v1.1">v1.1</option>
+                                                    <option value="v2.0">v2.0</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- Dummy Data Rows -->
                                 <tr>
                                     <td>1</td>
-                                    <td>v1.0</td>
-                                    <td><a href="#" class="view-link view-resume-link"
+                                    <td class="col-name"><a href="#" class="view-link view-resume-link"
                                             data-pdf="Charesh Reddy Resume.pdf"
                                             data-filename="Rohan_Mehta_Resume.pdf">Rohan Mehta</a></td>
-                                    <td>rohan.m@example.com</td>
+                                    <td class="col-contact">rohan.m@example.com</td>
                                     <td><a href="#" class="view-link view-resume-link"
                                             data-pdf="Charesh Reddy Resume.pdf"
                                             data-filename="Rohan_Sharma_Resume_V2.pdf">Rohan Mehta</a></td>
                                     <td>Divya Roja</td>
                                     <td>2023-10-20</td>
+                                    <td class="col-jd-v">v1.0</td>
                                 </tr>
                                 <tr>
                                     <td>2</td>
-                                    <td>v1.1</td>
-                                    <td><a href="#" class="view-link view-resume-link"
+                                    <td class="col-name"><a href="#" class="view-link view-resume-link"
                                             data-pdf="Charesh Reddy Resume.pdf"
                                             data-filename="Likith_Resume_v2.pdf">Likith Kumar</a></td>
-                                    <td>7989555306</td>
+                                    <td class="col-contact">7989555306</td>
                                     <td><a href="#" class="view-link view-resume-link"
                                             data-pdf="Charesh Reddy Resume.pdf"
                                             data-filename="Likith_K_Resume.pdf">Likith K</a></td>
                                     <td>Vishnu Vardhan</td>
                                     <td>2023-10-18</td>
+                                    <td class="col-jd-v">v1.1</td>
                                 </tr>
                                 <tr>
                                     <td>3</td>
-                                    <td>v2.0</td>
-                                    <td><a href="#" class="view-link view-resume-link"
+                                    <td class="col-name"><a href="#" class="view-link view-resume-link"
                                             data-pdf="Charesh Reddy Resume.pdf"
                                             data-filename="Amit_Kumar_Final.pdf">Amit Kumar</a></td>
-                                    <td>amit.k88@gmail.com</td>
+                                    <td class="col-contact">amit.k88@gmail.com</td>
                                     <td><a href="#" class="view-link view-resume-link"
                                             data-pdf="Charesh Reddy Resume.pdf"
                                             data-filename="Amit_Kumar_Final.pdf">Amit Kumar</a></td>
                                     <td>SriLakshmi</td>
                                     <td>2023-10-22</td>
+                                    <td class="col-jd-v">v2.0</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -4412,9 +4450,19 @@
                     <h3 class="modal-title" id="upload-modal-title" style="color: white; font-size: 1.2rem; margin: 0;">
                         Upload Resumes</h3>
                 </div>
-                <i class="fas fa-times" id="btn-close-upload-modal"
-                    style="cursor: pointer; font-size: 1.2rem; color: white;"
-                    onclick="document.getElementById('upload-modal').classList.remove('active')"></i>
+                <div class="modal-header-actions">
+                    <button id="btn-minimize-upload-modal" class="modal-header-btn" style="display: none;"
+                        onclick="toggleMinimizeUploadModal()">
+                        <i class="fas fa-window-minimize"></i>
+                    </button>
+                    <button id="btn-maximize-upload-modal" class="modal-header-btn" style="display: none;"
+                        onclick="toggleMinimizeUploadModal()">
+                        <i class="fas fa-window-maximize"></i>
+                    </button>
+                    <button id="btn-close-upload-x" class="modal-header-btn btn-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
 
@@ -4426,8 +4474,8 @@
                         <div class="modal-jd-info">
                             <h4>Selected Job Description</h4>
                             <h2 id="modal-jd-title">ERP Next Consultant – Senior</h2>
-                            <div class="modal-jd-meta"><span><i class="fas fa-map-marker-alt"></i>San
-                                    Francisco</span><span class="version-tag">v2.1 (Latest)</span></div>
+                            <div class="modal-jd-meta"><span><i class="fas fa-map-marker-alt"></i>Bangalore</span><span
+                                    class="version-tag">v2.1 (Latest)</span></div>
                         </div>
 
                     </div>
@@ -4541,7 +4589,8 @@
             <!-- Footer for Dropzone -->
             <div class="modal-footer" id="upload-footer-default" style="justify-content: flex-end;">
                 <div style="display: flex; gap: 12px;">
-                    <button class="btn-cancel" id="btn-cancel-modal">Close</button>
+                    <button class="btn-cancel" id="btn-cancel-modal"
+                        style="background-color: var(--danger); color: white; border: none;">Close</button>
                     <button class="btn-confirm" id="btn-confirm-modal">Upload Resumes</button>
                 </div>
             </div>
@@ -4549,8 +4598,8 @@
             <div class="modal-footer" id="upload-footer-progress"
                 style="display: none; justify-content: flex-end; align-items: center;">
                 <div style="display: flex; gap: 12px;">
-                    <button class="btn-cancel" id="btn-close-upload-modal"
-                        style="border: 1px solid #ddd; background: white; color: #333;">Close</button>
+                    <button class="btn-cancel" id="btn-close-upload-progress"
+                        style="background-color: var(--danger); color: white; border: none;">Close</button>
                     <button class="btn-confirm" id="btn-upload-done" disabled>Done</button>
                 </div>
             </div>
@@ -4558,7 +4607,7 @@
     </div>
     <!-- Resume Selection Modal -->
     <div class="modal-overlay" id="resume-select-modal">
-        <div class="modal-container" style="max-height: 85vh; width: 1200px;">
+        <div class="modal-container" style="max-height: 85vh; width: 730px;">
             <div class="modal-header"
                 style="display: flex; align-items: center; justify-content: space-between; background: var(--primary); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px; padding: 15px 25px;">
                 <div style="display: flex; align-items: center;">
@@ -4567,9 +4616,20 @@
                     <div class="modal-title" style="text-align: left; color: white; font-size: 1.2rem;">Select Resumes
                         for Analysis</div>
                 </div>
-                <i class="fas fa-times" id="btn-close-resume-modal"
-                    style="cursor: pointer; font-size: 1.2rem; color: #fff;"
-                    onclick="document.getElementById('resume-select-modal').classList.remove('active')"></i>
+                <div class="modal-header-actions">
+                    <button id="btn-minimize-analysis-modal" class="modal-header-btn" style="display: none;"
+                        onclick="toggleMinimizeAnalysisModal()">
+                        <i class="fas fa-window-minimize"></i>
+                    </button>
+                    <button id="btn-maximize-analysis-modal" class="modal-header-btn" style="display: none;"
+                        onclick="toggleMinimizeAnalysisModal()">
+                        <i class="fas fa-window-maximize"></i>
+                    </button>
+                    <button id="btn-close-resume-modal" class="modal-header-btn btn-close"
+                        onclick="closeAnalysisModalSafe()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
                 <!-- VIEW 1: SELECTION -->
@@ -4587,17 +4647,25 @@
                     </div>
                     <!-- Search & Filter -->
                     <div class="action-bar"
-                        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                        <div class="search-container" style="flex: 1; margin-right: 15px; position: relative;">
+                        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 15px;">
+                        <div class="search-container" style="flex: 1; position: relative;">
                             <i class="fas fa-search search-icon"
                                 style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
                             <input type="text" class="search-input" placeholder="Search resumes by candidate name..."
-                                style="width: 100%; padding: 10px 10px 10px 35px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none;">
+                                style="width: 100%; padding: 10px 10px 10px 35px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; box-sizing: border-box;">
+                        </div>
+                        <div
+                            style="display: flex; align-items: center; gap: 8px; flex-shrink: 0; background: #f8fafc; padding: 8px 16px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <input type="checkbox" id="select-all-resumes-btn"
+                                style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
+                            <label for="select-all-resumes-btn"
+                                style="cursor: pointer; font-size: 0.95rem; color: var(--text-dark); font-weight: 500;">Select
+                                All</label>
                         </div>
                     </div>
                     <!-- Resume List (Now Table) -->
                     <div class="table-container"
-                        style="padding: 0; box-shadow: none; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                        style="padding: 0; box-shadow: none; border: 1px solid #e2e8f0; border-radius: 8px; overflow-x: auto; overflow-y: hidden;">
                         <table class="selection-table" style="width: 100%; border-collapse: collapse;">
                             <thead>
                                 <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
@@ -4608,11 +4676,14 @@
                                         <input type="checkbox" id="select-all-resumes"
                                             style="cursor: pointer; accent-color: var(--primary);">
                                     </th>
-                                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b;">
+                                    <th
+                                        style="padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b; white-space: nowrap;">
                                         Candidate Name</th>
-                                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b;">
+                                    <th
+                                        style="padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b; white-space: nowrap;">
                                         Email ID</th>
-                                    <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b;">
+                                    <th
+                                        style="padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b; white-space: nowrap;">
                                         Phone Number</th>
                                 </tr>
                             </thead>
@@ -4620,37 +4691,47 @@
                                 <tr class="resume-row" onclick="toggleRowSelection(this)">
                                     <td>1</td>
                                     <td style="text-align: center;"><input type="checkbox" class="custom-checkbox"></td>
-                                    <td style="font-weight: 500; color: var(--text-dark);">Ravi Teja</td>
-                                    <td style="color: var(--text-muted);">ravi.teja@example.com</td>
-                                    <td style="color: var(--text-muted);">+91 98765 43210</td>
+                                    <td style="font-weight: 500; color: var(--text-dark); white-space: nowrap;">Ravi
+                                        Teja</td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">ravi.teja@example.com
+                                    </td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">+91 98765 43210</td>
                                 </tr>
                                 <tr class="resume-row" onclick="toggleRowSelection(this)">
                                     <td>2</td>
                                     <td style="text-align: center;"><input type="checkbox" class="custom-checkbox"></td>
-                                    <td style="font-weight: 500; color: var(--text-dark);">Sita Lakshmi</td>
-                                    <td style="color: var(--text-muted);">sita.lakshmi@example.com</td>
-                                    <td style="color: var(--text-muted);">+91 98765 43211</td>
+                                    <td style="font-weight: 500; color: var(--text-dark); white-space: nowrap;">Sita
+                                        Lakshmi</td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">sita.lakshmi@example.com
+                                    </td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">+91 98765 43211</td>
                                 </tr>
                                 <tr class="resume-row" onclick="toggleRowSelection(this)">
                                     <td>3</td>
                                     <td style="text-align: center;"><input type="checkbox" class="custom-checkbox"></td>
-                                    <td style="font-weight: 500; color: var(--text-dark);">Venkatesh Duggirala</td>
-                                    <td style="color: var(--text-muted);">venkatesh.d@example.com</td>
-                                    <td style="color: var(--text-muted);">+91 98765 43212</td>
+                                    <td style="font-weight: 500; color: var(--text-dark); white-space: nowrap;">
+                                        Venkatesh Duggirala</td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">venkatesh.d@example.com
+                                    </td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">+91 98765 43212</td>
                                 </tr>
                                 <tr class="resume-row" onclick="toggleRowSelection(this)">
                                     <td>4</td>
                                     <td style="text-align: center;"><input type="checkbox" class="custom-checkbox"></td>
-                                    <td style="font-weight: 500; color: var(--text-dark);">Anjali Reddy</td>
-                                    <td style="color: var(--text-muted);">anjali.reddy@example.com</td>
-                                    <td style="color: var(--text-muted);">+91 98765 43213</td>
+                                    <td style="font-weight: 500; color: var(--text-dark); white-space: nowrap;">Anjali
+                                        Reddy</td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">anjali.reddy@example.com
+                                    </td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">+91 98765 43213</td>
                                 </tr>
                                 <tr class="resume-row" onclick="toggleRowSelection(this)">
                                     <td>5</td>
                                     <td style="text-align: center;"><input type="checkbox" class="custom-checkbox"></td>
-                                    <td style="font-weight: 500; color: var(--text-dark);">Sai Kumar</td>
-                                    <td style="color: var(--text-muted);">sai.kumar@example.com</td>
-                                    <td style="color: var(--text-muted);">+91 98765 43214</td>
+                                    <td style="font-weight: 500; color: var(--text-dark); white-space: nowrap;">Sai
+                                        Kumar</td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">sai.kumar@example.com
+                                    </td>
+                                    <td style="color: var(--text-muted); white-space: nowrap;">+91 98765 43214</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -4952,16 +5033,16 @@
                 </div>
 
                 <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
-                    <button class="btn-cancel" id="btn-close-results-view" onclick="closeAnalysisView()"
-                        style="border: 1px solid #ddd; background: #FC4860; color: white; padding: 10px 24px;">Close</button>
-                    <button class="btn-confirm" id="btn-done-results-view"
-                        onclick="document.getElementById('resume-select-modal').classList.remove('active')"
+                    <button class="btn-cancel" id="btn-close-results-view"
+                        onclick="closeAnalysisView(); closeAnalysisModalSafe();"
+                        style="border: none; background: var(--danger); color: white; padding: 10px 24px;">Close</button>
+                    <button class="btn-confirm" id="btn-done-results-view" onclick="closeAnalysisModalSafe()"
                         style="background: var(--primary); color: white; padding: 10px 32px; font-weight: 600;">Done</button>
                 </div>
             </div>
             <div class="modal-footer" id="modal-footer-selection"><button class="btn-cancel" id="btn-cancel-select"
-                    style="background: #FC4860; color: white;">Close</button><button class="btn-confirm"
-                    id="btn-start-analysis-modal" disabled>Start Analysis (0)</button></div>
+                    style="border: none; background: var(--danger); color: white;">Close</button><button
+                    class="btn-confirm" id="btn-start-analysis-modal" disabled>Start Analysis (0)</button></div>
             <!-- ANALYSIS FOOTER (New) -->
             <div class="modal-footer" id="modal-footer-progress" style="display: none; justify-content: space-between;">
                 <span style="font-size:0.85rem; color:#666; align-self:center;">Analysis in progress...</span>
@@ -4984,11 +5065,11 @@
     <div class="modal-overlay" id="pdf-viewer-modal">
         <div class="modal-container">
             <div class="modal-header">
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <div class="modal-title" id="pdf-viewer-title">Document Viewer</div>
-                    <button class="btn-cancel" id="btn-close-pdf-modal"
-                        style="padding: 6px 16px; background: #FC4860; color: white;">
-                        <i class="fas fa-times"></i> Close
+                <div class="modal-title" id="pdf-viewer-title">Document Viewer</div>
+                <div class="modal-header-actions">
+                    <button class="modal-header-btn btn-close" id="btn-close-pdf-modal-x"
+                        onclick="document.getElementById('pdf-viewer-modal').classList.remove('active')">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
@@ -4998,16 +5079,20 @@
         </div>
     </div>
 
-    <input type="file" id="jd-upload-input" accept="application/pdf" style="display: none;">
+    <input type="file" id="jd-upload-input" accept="application/pdf" style="display: none;" multiple>
     <!-- Hidden File Input for JD Update --><input type="file" id="jd-update-input" accept="application/pdf"
         style="display: none;">
 
     <!-- DUPLICATE RESUME DETECTION MODAL -->
     <div class="dup-modal-overlay" id="dup-modal">
-        <div class="dup-modal-container">
+        <div class="modal-container">
             <div class="modal-header">
-                <div class="modal-title">Duplicate Resume Detected!</div>
-                <button class="close-btn" id="dup-close-btn"><i class="fas fa-times"></i></button>
+                <h3 class="modal-title">Duplicate Resume Detected!</h3>
+                <div class="modal-header-actions">
+                    <button class="modal-header-btn btn-close" id="dup-close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="dup-info-text">
@@ -5041,7 +5126,7 @@
                             </td>
                             <td style="padding: 12px;">
                                 <div class="dup-badge-mini"
-                                    style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; background: #fff7ed; color: #c2410c; border-radius: 4px; font-size: 0.8rem;">
+                                    style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; background: #fff7ed; color: #c2410c; border-radius: 4px; font-size: 0.8rem; white-space: nowrap;">
                                     rohan.m@example.com
                                 </div>
                             </td>
@@ -5055,7 +5140,7 @@
                             </td>
                             <td style="padding: 12px;">
                                 <div class="dup-badge-mini"
-                                    style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; background: #fff7ed; color: #c2410c; border-radius: 4px; font-size: 0.8rem;">
+                                    style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; background: #fff7ed; color: #c2410c; border-radius: 4px; font-size: 0.8rem; white-space: nowrap;">
                                     9876543201
                                 </div>
                             </td>
@@ -5069,7 +5154,7 @@
                             </td>
                             <td style="padding: 12px;">
                                 <div class="dup-badge-mini"
-                                    style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; background: #fff7ed; color: #c2410c; border-radius: 4px; font-size: 0.8rem;">
+                                    style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; background: #fff7ed; color: #c2410c; border-radius: 4px; font-size: 0.8rem; white-space: nowrap;">
                                     ravi.teja@example.com
                                 </div>
                             </td>
@@ -5095,15 +5180,17 @@
     </div>
     <!-- JD PREVIEW MODAL -->
     <div class="modal-overlay" id="jd-preview-modal">
-        <div class="modal-container" style="width: 75%; height: 90vh; max-width: 1100px;">
+        <div class="modal-container" style="height: 90vh;">
             <div class="modal-header">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <i class="fas fa-arrow-left" style="cursor: pointer; font-size: 1.2rem; color: #fff;"
                         onclick="closeJdPreviewModal()"></i>
                     <span class="modal-title">JD Approval</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <span class="close-modal" onclick="closeJdPreviewModal()">&times;</span>
+                <div class="modal-header-actions">
+                    <button class="modal-header-btn btn-close" onclick="closeJdPreviewModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             </div>
             <div class="modal-body"
@@ -5139,14 +5226,18 @@
 
     <!-- DISAPPROVAL REASON MODAL -->
     <div class="modal-overlay" id="disapproval-modal">
-        <div class="modal-container" style="width: 500px;">
+        <div class="modal-container">
             <div class="modal-header">
                 <div style="display: flex; align-items: center;">
                     <i class="fas fa-arrow-left" onclick="goBackToJdPreview()"
                         style="cursor: pointer; margin-right: 15px; font-size: 1.1rem; color: #fff;"></i>
                     <span class="modal-title">Disapprove JD Request</span>
                 </div>
-                <span class="close-modal" onclick="closeDisapproveModal()">&times;</span>
+                <div class="modal-header-actions">
+                    <button class="modal-header-btn btn-close" onclick="closeDisapproveModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
                 <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">
@@ -5342,15 +5433,20 @@
             // 1. Open Modal on "Upload Resumes" click
             if (uploadBtn && modal) {
                 uploadBtn.addEventListener('click', () => {
-                    // Sync JD Title
+                    // Sync JD Title & Version
                     const currentJd = jdSelect ? jdSelect.value : 'ERP Next Consultant';
+                    const selectedOption = jdSelect ? jdSelect.options[jdSelect.selectedIndex] : null;
+                    const currentVersion = selectedOption ? selectedOption.getAttribute('data-version') : 'v2.1';
 
-                    if (modalJdTitle) {
-                        // Appending " - Senior" just to match the visual request or keep as is? 
-                        // The request said "the JD name need to change as in the selected jd in dashboard"
-                        // So I will just use the value.
-                        modalJdTitle.textContent = currentJd;
-                    }
+                    if (modalJdTitle) modalJdTitle.textContent = currentJd;
+                    const jdTitleSelected = document.getElementById('selected-files-jd-title');
+                    if (jdTitleSelected) jdTitleSelected.textContent = currentJd;
+
+                    // Sync Version Tags in Upload Modal
+                    const versionTags = modal.querySelectorAll('.version-tag');
+                    versionTags.forEach(tag => {
+                        tag.textContent = currentVersion + (currentVersion === 'v2.1' ? ' (Latest)' : '');
+                    });
 
                     modal.classList.add('active');
                 });
@@ -5372,21 +5468,7 @@
                 input.addEventListener('input', calculateTotalWeight);
             });
 
-            // 3. Close Modal (Cancel)
-            // Close modal with X button
-            const btnCloseX = document.getElementById('btn-close-upload-x');
-            if (btnCloseX) {
-                btnCloseX.addEventListener('click', () => {
-                    if (modal) modal.classList.remove('active');
-                });
-            }
-            if (btnCancelModal && modal) {
-                btnCancelModal.addEventListener('click', () => {
-                    modal.classList.remove('active');
-                    // Reset input if needed? 
-                    // No, keeping it simple.
-                });
-            }
+            // 3. Close Modal (Safe close handled below)
 
             // 4. Confirm Upload
             // This button might process the files if already selected (dragdrop) or just close?
@@ -5450,7 +5532,12 @@
             const btnClearCenter = document.getElementById('btn-clear-selection-centered');
 
             const triggerFileInput = () => { if (fileInput) fileInput.click(); };
-            const clearSelection = () => { selectedResumes = []; updateSelectedFilesUI(); };
+            const clearSelection = () => {
+                if (confirm("Are you sure you want to clear all selected resumes?")) {
+                    selectedResumes = [];
+                    updateSelectedFilesUI();
+                }
+            };
 
             if (btnAddMoreCenter) btnAddMoreCenter.addEventListener('click', triggerFileInput);
             if (btnClearCenter) btnClearCenter.addEventListener('click', clearSelection);
@@ -5470,10 +5557,13 @@
                         document.getElementById('upload-footer-progress').style.display = 'flex';
 
                         // Update Progress Header with JD Info
-                        const currentJd = jdSelect ? jdSelect.value : 'ERP Next Consultant';
+                        const selectedOption = jdSelect ? jdSelect.options[jdSelect.selectedIndex] : null;
+                        const currentJd = selectedOption ? selectedOption.value : 'ERP Next Consultant';
+                        const currentVersion = selectedOption ? selectedOption.getAttribute('data-version') : 'v2.1';
+
                         const jdContext = document.getElementById('upload-jd-context');
                         if (jdContext) {
-                            jdContext.textContent = `${currentJd} - v2.1`;
+                            jdContext.textContent = `${currentJd} - ${currentVersion}`;
                         }
 
                         document.getElementById('upload-modal-title').textContent = "Resumes Upload Status";
@@ -5511,14 +5601,79 @@
                 btnBackUpload.addEventListener('click', goBackToSelection);
             }
 
-            // Close Button Logic
-            const btnCloseUpload = document.getElementById('btn-close-upload-modal');
-            if (btnCloseUpload) {
-                btnCloseUpload.addEventListener('click', () => {
+            window.toggleMinimizeAnalysisModal = function () {
+                const overlay = document.getElementById('resume-select-modal');
+                const btnMin = document.getElementById('btn-minimize-analysis-modal');
+                const btnMax = document.getElementById('btn-maximize-analysis-modal');
+
+                if (overlay) {
+                    overlay.classList.toggle('minimized');
+                    const isMinimized = overlay.classList.contains('minimized');
+
+                    if (btnMin && btnMax) {
+                        btnMin.style.display = isMinimized ? 'none' : 'flex';
+                        btnMax.style.display = isMinimized ? 'flex' : 'none';
+                    }
+                }
+            };
+
+            window.closeAnalysisModalSafe = function () {
+                const modal = document.getElementById('resume-select-modal');
+                if (modal) {
                     modal.classList.remove('active');
-                    setTimeout(() => resetUploadModalVO(), 500);
-                });
-            }
+                    modal.classList.remove('minimized');
+                }
+                const btnMin = document.getElementById('btn-minimize-analysis-modal');
+                const btnMax = document.getElementById('btn-maximize-analysis-modal');
+                if (btnMin) btnMin.style.display = 'none';
+                if (btnMax) btnMax.style.display = 'none';
+            };
+
+            // Minimize Modal Logic
+            window.toggleMinimizeUploadModal = function () {
+                const overlay = document.getElementById('upload-modal');
+                const btnMin = document.getElementById('btn-minimize-upload-modal');
+                const btnMax = document.getElementById('btn-maximize-upload-modal');
+
+                if (overlay) {
+                    overlay.classList.toggle('minimized');
+                    const isMinimized = overlay.classList.contains('minimized');
+
+                    if (btnMin && btnMax) {
+                        btnMin.style.display = isMinimized ? 'none' : 'flex';
+                        btnMax.style.display = isMinimized ? 'flex' : 'none';
+                    }
+                }
+            };
+
+            // Close Button Logic (New Safe Close)
+            const safeCloseUploadModal = () => {
+                const overlay = document.getElementById('upload-modal');
+                const progressView = document.getElementById('upload-view-progress');
+                const isProgressView = progressView && progressView.style.display !== 'none';
+
+                // Reset Minimize State safely
+                if (overlay) {
+                    overlay.classList.remove('minimized');
+                    const btnMin = document.getElementById('btn-minimize-upload-modal');
+                    const btnMax = document.getElementById('btn-maximize-upload-modal');
+                    if (btnMin) btnMin.style.display = isProgressView ? 'flex' : 'none'; // Only flex if progress
+                    if (btnMax) btnMax.style.display = 'none';
+                }
+
+                if (overlay) overlay.classList.remove('active');
+                if (!isProgressView) {
+                    resetUploadModalVO();
+                }
+            };
+
+            const btnCloseX = document.getElementById('btn-close-upload-x');
+            const btnCloseFooter = document.getElementById('btn-close-upload-modal'); // This might be used elsewhere, let's check
+            const btnCloseProgress = document.getElementById('btn-close-upload-progress');
+
+            if (btnCloseX) btnCloseX.addEventListener('click', safeCloseUploadModal);
+            if (btnCancelModal) btnCancelModal.addEventListener('click', safeCloseUploadModal);
+            if (btnCloseProgress) btnCloseProgress.addEventListener('click', safeCloseUploadModal);
 
             // --- IN-MODAL PROGRESS SIMULATION ---
             function simulateUploadProgress(files) {
@@ -5543,6 +5698,10 @@
                 }
                 if (footerDrop) footerDrop.style.display = 'none';
                 if (footerProgress) footerProgress.style.display = 'flex';
+
+                // Show minimize button now that we are in progress view
+                const btnMin = document.getElementById('btn-minimize-upload-modal');
+                if (btnMin) btnMin.style.display = 'flex'; // It's a button with display: flex now
 
                 const totalCount = files.length;
                 const progressBar = document.getElementById('uploadProgressBar');
@@ -5661,8 +5820,20 @@
                 updateSelectedFilesUI();
 
                 // Reset Views
-                document.getElementById('upload-view-dropzone').style.display = 'block';
-                document.getElementById('selected-files-view').style.display = 'none';
+                const dropzoneView = document.getElementById('upload-view-dropzone');
+                if (dropzoneView) {
+                    dropzoneView.style.display = 'flex';
+                    dropzoneView.style.flexDirection = 'column';
+                    dropzoneView.style.width = '100%';
+                }
+
+                const selectedView = document.getElementById('selected-files-view');
+                if (selectedView) {
+                    selectedView.style.display = 'none';
+                    selectedView.style.flexDirection = 'column';
+                    selectedView.style.width = '100%';
+                }
+
                 document.getElementById('upload-footer-default').style.display = 'flex';
                 document.getElementById('upload-view-progress').style.display = 'none';
                 document.getElementById('upload-footer-progress').style.display = 'none';
@@ -5670,6 +5841,12 @@
                 document.getElementById('upload-modal-title').textContent = "Upload Resumes";
                 const backHeader = document.getElementById('btn-back-upload-header');
                 if (backHeader) backHeader.style.display = 'none';
+
+                // Hide minimize buttons on reset
+                const btnMin = document.getElementById('btn-minimize-upload-modal');
+                const btnMax = document.getElementById('btn-maximize-upload-modal');
+                if (btnMin) btnMin.style.display = 'none';
+                if (btnMax) btnMax.style.display = 'none';
 
                 document.getElementById('uploadProgressBar').style.width = '0%';
                 document.getElementById('uploadFileTableBody').innerHTML = '';
@@ -5837,11 +6014,21 @@
             // Open Modal
             if (startAnalysisBtn && resumeSelectModal) {
                 startAnalysisBtn.addEventListener('click', () => {
-                    // Sync JD Title
+                    // Sync JD Title & Version
                     const currentJd = jdSelect ? jdSelect.value : 'ERP Next Consultant';
+                    const selectedOption = jdSelect ? jdSelect.options[jdSelect.selectedIndex] : null;
+                    const currentVersion = selectedOption ? selectedOption.getAttribute('data-version') : 'v2.1';
 
                     if (resumeSelectJdTitle) {
                         resumeSelectJdTitle.textContent = currentJd;
+                    }
+                    // Sync Version Tag in Selection View
+                    const versionTag = resumeSelectModal.querySelector('.version-tag');
+                    if (versionTag) versionTag.textContent = currentVersion;
+
+                    const progressJdTitle = document.getElementById('analysis-progress-jd-value');
+                    if (progressJdTitle) {
+                        progressJdTitle.innerHTML = `<a href="#" class="view-link view-jd-link" style="color: inherit; text-decoration: none;"> ${currentJd} - ${currentVersion}</a>`;
                     }
 
                     resumeSelectModal.classList.add('active');
@@ -5851,7 +6038,7 @@
             // Close Modal
             if (btnCancelSelect && resumeSelectModal) {
                 btnCancelSelect.addEventListener('click', () => {
-                    resumeSelectModal.classList.remove('active');
+                    closeAnalysisModalSafe();
                 });
             }
 
@@ -5889,37 +6076,53 @@
 
                 // Sync "Select All" Checkbox
                 const selectAllResumes = document.getElementById('select-all-resumes');
+                const selectAllResumesBtn = document.getElementById('select-all-resumes-btn');
+
+                const isAllChecked = (selectedCount === allCheckboxes.length);
+                const isIndeterminate = (selectedCount > 0 && selectedCount < allCheckboxes.length);
+
                 if (selectAllResumes && allCheckboxes.length > 0) {
-                    selectAllResumes.checked = (selectedCount === allCheckboxes.length);
-                    selectAllResumes.indeterminate = (selectedCount > 0 && selectedCount < allCheckboxes.length);
+                    selectAllResumes.checked = isAllChecked;
+                    selectAllResumes.indeterminate = isIndeterminate;
+                }
+                if (selectAllResumesBtn && allCheckboxes.length > 0) {
+                    selectAllResumesBtn.checked = isAllChecked;
+                    selectAllResumesBtn.indeterminate = isIndeterminate;
                 }
             }
 
             // --- Select All Logic ---
             const selectAllResumes = document.getElementById('select-all-resumes');
-            if (selectAllResumes) {
-                selectAllResumes.addEventListener('change', (e) => {
-                    const isChecked = e.target.checked;
-                    // Support both card and table row layouts if mixed, or just the current table rows
-                    const checkboxes = resumeSelectModal.querySelectorAll('.resume-card .custom-checkbox, .resume-row .custom-checkbox');
+            const selectAllResumesBtn = document.getElementById('select-all-resumes-btn');
 
-                    checkboxes.forEach(chk => {
-                        chk.checked = isChecked;
-                        // Handle visual selection state
-                        const card = chk.closest('.resume-card');
-                        if (card) {
-                            if (isChecked) card.classList.add('selected');
-                            else card.classList.remove('selected');
-                        }
-                        const row = chk.closest('.resume-row');
-                        if (row) {
-                            if (isChecked) row.classList.add('selected');
-                            else row.classList.remove('selected');
-                        }
-                    });
+            const handleSelectAllChange = (e) => {
+                const isChecked = e.target.checked;
+                // Support both card and table row layouts if mixed, or just the current table rows
+                const checkboxes = resumeSelectModal.querySelectorAll('.resume-card .custom-checkbox, .resume-row .custom-checkbox');
 
-                    updateSelectButtonState();
+                checkboxes.forEach(chk => {
+                    chk.checked = isChecked;
+                    // Handle visual selection state
+                    const card = chk.closest('.resume-card');
+                    if (card) {
+                        if (isChecked) card.classList.add('selected');
+                        else card.classList.remove('selected');
+                    }
+                    const row = chk.closest('.resume-row');
+                    if (row) {
+                        if (isChecked) row.classList.add('selected');
+                        else row.classList.remove('selected');
+                    }
                 });
+
+                updateSelectButtonState();
+            };
+
+            if (selectAllResumes) {
+                selectAllResumes.addEventListener('change', handleSelectAllChange);
+            }
+            if (selectAllResumesBtn) {
+                selectAllResumesBtn.addEventListener('change', handleSelectAllChange);
             }
 
             // Initial call to ensure button state is correct on load
@@ -5945,6 +6148,9 @@
 
                     viewProgress.style.display = 'block';
                     footerProgress.style.display = 'flex';
+
+                    const btnMin = document.getElementById('btn-minimize-analysis-modal');
+                    if (btnMin) btnMin.style.display = 'flex';
 
 
                     if (modalTitle) modalTitle.textContent = "Resume Analysis Status";
@@ -6021,7 +6227,7 @@
                             <h4 style="font-size: 0.7rem; margin-bottom: 2px;">SELECTED JOB DESCRIPTION</h4>
                             <h2 style="font-size: 1.1rem; margin-bottom: 4px;">${currentJd}</h2>
                             <div class="modal-jd-meta" style="font-size: 0.8rem;">
-                                <span><i class="fas fa-map-marker-alt"></i> San Francisco</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Bangalore</span>
                                 <span class="version-tag" style="background-color: #bef264; color: #365314; font-size: 0.7rem;"><a href="#" style="color: inherit; text-decoration: none;">v2.1 (Latest)</a></span>
                             </div>
                         </div>
@@ -6055,7 +6261,10 @@
                 // Populate Header Content
                 const contextDiv = document.getElementById('analysis-results-jd-context');
                 if (contextDiv) {
-                    const currentJd = (document.getElementById('jd-select') && document.getElementById('jd-select').value) || 'ERP Next Consultant';
+                    const selectedOption = jdSelect ? jdSelect.options[jdSelect.selectedIndex] : null;
+                    const currentJd = selectedOption ? selectedOption.value : 'ERP Next Consultant';
+                    const currentVersion = selectedOption ? selectedOption.getAttribute('data-version') : 'v2.1';
+
                     contextDiv.innerHTML = `
                     <div class="modal-jd-card" style="margin-bottom: 0; background: transparent; box-shadow: none; border: none; padding: 0;">
                         <div class="modal-jd-icon" style="background: #bae6fd;"><i class="fas fa-briefcase"></i></div>
@@ -6063,8 +6272,8 @@
                             <h4 style="font-size: 0.7rem; margin-bottom: 2px;">SELECTED JOB DESCRIPTION</h4>
                             <h2 style="font-size: 1.1rem; margin-bottom: 4px;">${currentJd}</h2>
                             <div class="modal-jd-meta" style="font-size: 0.8rem;">
-                                <span><i class="fas fa-map-marker-alt"></i> San Francisco</span>
-                                <span class="version-tag" style="background-color: #bef264; color: #365314; font-size: 0.7rem;"><a href="#" style="color: inherit; text-decoration: none;">v2.1 (Latest)</a></span>
+                                <span><i class="fas fa-map-marker-alt"></i> Bangalore</span>
+                                <span class="version-tag" style="background-color: #bef264; color: #365314; font-size: 0.7rem;"><a href="#" style="color: inherit; text-decoration: none;">${currentVersion}${currentVersion === 'v2.1' ? ' (Latest)' : ''}</a></span>
                             </div>
                         </div>
                     </div>`;
@@ -7333,10 +7542,13 @@
     <!-- JD UPDATE MODAL -->
     <div class="jd-modal-overlay" id="jd-update-modal">
         <div class="jd-modal-container">
-            <div class="modal-header"
-                style="background: var(--primary); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center;">
-                <h3 class="modal-title" style="color: white; font-size: 1.2rem; margin: 0;">Update Job Description</h3>
-                <i class="fas fa-times close-modal" id="jd-close-btn" onclick="closeJdUpdateModal()"></i>
+            <div class="modal-header">
+                <h3 class="modal-title">Update Job Description</h3>
+                <div class="modal-header-actions">
+                    <button class="modal-header-btn btn-close" id="jd-close-btn" onclick="closeJdUpdateModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-body" style="padding: 0;">
                 <div style="padding: 24px 24px 10px;">
@@ -7364,7 +7576,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" id="jd-cancel-btn">Cancel</button>
+                <button class="btn btn-secondary" id="jd-cancel-btn"
+                    style="background: #FC4860; color: white;">Close</button>
                 <button class="btn btn-primary" id="jd-submit-btn" disabled>Update</button>
             </div>
         </div>
@@ -8599,9 +8812,9 @@
                         if (typeof filter.colIndex === 'number') {
                             td = tds[filter.colIndex];
                         } else {
-                            if (filter.colIndex === 'dup-version') td = tr.querySelector('.col-jd-v') || tds[1];
-                            if (filter.colIndex === 'dup-name') td = tr.querySelector('.col-name') || tds[2];
-                            if (filter.colIndex === 'dup-contact') td = tr.querySelector('.col-contact') || tds[3];
+                            if (filter.colIndex === 'dup-version') td = tr.querySelector('.col-jd-v') || tds[6];
+                            if (filter.colIndex === 'dup-name') td = tr.querySelector('.col-name') || tds[1];
+                            if (filter.colIndex === 'dup-contact') td = tr.querySelector('.col-contact') || tds[2];
                         }
 
                         if (td) {
@@ -8770,6 +8983,11 @@
             setWeightsEditable(currentlyDisabled);
         }
 
+        function closeScoringCriteriaModal() {
+            document.getElementById('scoring-criteria-modal').classList.remove('active');
+            isCreationFlow = false; // Reset flow state
+        }
+
         function closeScoringCriteria() {
             const scoringJdTitle = document.getElementById('scoring-jd-title');
             const currentJd = scoringJdTitle ? scoringJdTitle.textContent : 'ERP Next Consultant';
@@ -8778,9 +8996,7 @@
                 // Apply defaults
                 loadCriteriaForJd(currentJd, true);
                 calculateTotalWeight();
-
-                document.getElementById('scoring-criteria-modal').classList.remove('active');
-                isCreationFlow = false; // Reset flow state
+                closeScoringCriteriaModal();
             }
         }
 
@@ -8960,7 +9176,7 @@
 
                 addToHistory(currentJd, 'v1.0', 'Approved');
 
-                closeScoringCriteria();
+                closeScoringCriteriaModal();
 
                 // If it was manual creation, return to dashboard
                 setTimeout(() => {
@@ -9074,11 +9290,15 @@
     </script>
     <!-- HR Status Reason Modal -->
     <div class="modal-overlay" id="hr-status-modal" style="z-index: 2000;">
-        <div class="modal-container" style="max-width: 480px;">
+        <div class="modal-container">
             <div class="modal-header"
                 style="background: var(--primary); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center;">
                 <h3 class="modal-title" style="color: white; font-size: 1.2rem; margin: 0;">Update HR Status</h3>
-                <i class="fas fa-times close-modal" onclick="closeHrStatusModal()"></i>
+                <div class="modal-header-actions">
+                    <button class="modal-header-btn btn-close" onclick="closeHrStatusModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
                 <p style="margin-bottom: 24px; color: #64748b; font-size: 0.95rem; line-height: 1.6;">Select the new
@@ -9115,16 +9335,18 @@
     </div>
     <!-- SCORING CRITERIA MODAL -->
     <div class="modal-overlay" id="scoring-criteria-modal">
-        <div class="modal-container" style="max-width: 700px;">
+        <div class="modal-container">
             <div class="modal-header">
                 <div style="display: flex; align-items: center;">
                     <i class="fas fa-arrow-left" onclick="goBackToJdPreviewScoring()"
                         style="cursor: pointer; margin-right: 15px; font-size: 1.1rem; color: #fff;"></i>
                     <span class="modal-title">Scoring Criteria</span>
                 </div>
-                <button class="close-btn" onclick="closeScoringCriteria()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <div class="modal-header-actions">
+                    <button class="modal-header-btn btn-close" onclick="closeScoringCriteria()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
                 <!-- JD Context -->
