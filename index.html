@@ -3095,7 +3095,7 @@
                     text-decoration: underline;
                 }
 
-                /* HR STATUS REASON MODAL STYLES (Based on User Image) */
+                /* HR STATUS  MODAL STYLES (Based on User Image) */
                 /* HR STATUS MODAL BEAUTIFICATION */
                 #hr-status-modal .modal-container {
                     border-radius: 16px;
@@ -9304,10 +9304,10 @@
 
             if (editBtn) {
                 if (editable) {
-                    editBtn.innerHTML = '<i class="fas fa-lock"></i> Lock Weights';
+                    editBtn.innerHTML = '<i class="fas fa-lock"></i> Lock Scores';
                     editBtn.style.backgroundColor = '#64748b';
                 } else {
-                    editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i> Edit Weights';
+                    editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i> Edit Scores';
                     editBtn.style.backgroundColor = 'var(--primary)';
                 }
             }
@@ -9644,7 +9644,7 @@
             </div>
             <div class="modal-body" style="text-align: left;">
                 <p style="margin-bottom: 24px; color: #64748b; font-size: 0.95rem; line-height: 1.6;">Select the
-                    status and provide a mandatory reason for this change.</p>
+                    status and provide a mandatory explanation for this change.</p>
 
                 <div style="margin-bottom: 24px;">
                     <label
@@ -9660,13 +9660,13 @@
 
                 <div style="margin-bottom: 8px;">
                     <label
-                        style="display: block; font-weight: 600; margin-bottom: 10px; color: #1e293b; font-size: 0.9rem;">Reason
+                        style="display: block; font-weight: 600; margin-bottom: 10px; color: #1e293b; font-size: 0.9rem;">Explanation
                         / Comments <span style="color: #FC4860;">*</span></label>
                     <textarea id="hr-status-reason" rows="4"
-                        placeholder="Please provide a detailed reason (minimum 5 words)..."></textarea>
+                        placeholder="Please provide a detailed explanation (minimum 5 words)..."></textarea>
                     <div id="hr-status-error"
                         style="color: #FC4860; font-size: 0.85rem; margin-top: 8px; display: none; font-weight: 600;">
-                        <i class="fas fa-exclamation-circle"></i> Reason is required.
+                        <i class="fas fa-exclamation-circle"></i> Explanation is required.
                     </div>
                 </div>
             </div>
@@ -9711,12 +9711,12 @@
                     <div>
                         <h3 style="font-size: 1rem; color: var(--text-dark); margin-bottom: 4px;">Scoring Strategy
                         </h3>
-                        <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 500px;">Set the weight for
-                            each dimension (out of 10). Higher weights have a greater impact on the final score.</p>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 500px;">Set the score for
+                            each dimension (out of 10). Higher scores have a greater impact on the final result.</p>
                     </div>
                     <button id="btn-edit-weights" class="btn-confirm"
                         style="padding: 8px 16px; font-size: 0.85rem; height: auto;" onclick="toggleWeightEditing()">
-                        <i class="fas fa-pencil-alt"></i> Edit Weights
+                        <i class="fas fa-pencil-alt"></i> Edit Scores
                     </button>
                 </div>
 
@@ -9730,7 +9730,6 @@
                             </div>
                             <div class="scoring-input-group">
                                 <input type="number" class="scoring-input" id="weight-qual" value="10" min="0" max="10">
-                                <span class="scoring-unit">Weight</span>
                             </div>
                         </div>
                         <div class="impact-meter-container">
@@ -9749,7 +9748,6 @@
                             </div>
                             <div class="scoring-input-group">
                                 <input type="number" class="scoring-input" id="weight-skill" value="7" min="0" max="10">
-                                <span class="scoring-unit">Weight</span>
                             </div>
                         </div>
                         <div class="impact-meter-container">
@@ -9768,7 +9766,6 @@
                             </div>
                             <div class="scoring-input-group">
                                 <input type="number" class="scoring-input" id="weight-cert" value="10" min="0" max="10">
-                                <span class="scoring-unit">Weight</span>
                             </div>
                         </div>
                         <div class="impact-meter-container">
@@ -9788,7 +9785,6 @@
                             <div class="scoring-input-group">
                                 <input type="number" class="scoring-input" id="weight-rel-exp" value="5" min="0"
                                     max="10">
-                                <span class="scoring-unit">Weight</span>
                             </div>
                         </div>
                         <div class="impact-meter-container">
@@ -9808,7 +9804,6 @@
                             <div class="scoring-input-group">
                                 <input type="number" class="scoring-input" id="weight-total-exp" value="5" min="0"
                                     max="10">
-                                <span class="scoring-unit">Weight</span>
                             </div>
                         </div>
                         <div class="impact-meter-container">
@@ -9827,7 +9822,6 @@
                             </div>
                             <div class="scoring-input-group">
                                 <input type="number" class="scoring-input" id="weight-resp" value="8" min="0" max="10">
-                                <span class="scoring-unit">Weight</span>
                             </div>
                         </div>
                         <div class="impact-meter-container">
@@ -9850,7 +9844,7 @@
                 <div
                     style="margin-top: 20px; padding: 16px; background-color: #f8fafc; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <span style="font-weight: 600; color: var(--text-dark);">Total Combined Weight:</span>
+                        <span style="font-weight: 600; color: var(--text-dark);">Total Combined Score:</span>
                         <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">(Used for weighted average
                             suitability calculation)</div>
                     </div>
@@ -9859,7 +9853,7 @@
                 </div>
                 <div id="weight-error"
                     style="color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none;">
-                    Total weight must be greater than 0
+                    Total score must be greater than 0
                 </div>
 
 
